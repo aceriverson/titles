@@ -1,0 +1,9 @@
+.env
+
+.DS_Store
+
+node_modules
+
+go.sum
+
+frontend/public/build

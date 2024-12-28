@@ -1,0 +1,9 @@
+package titles
+
+import (
+	"titles.run/titles/models"
+)
+
+func (h *TitlesCore) GetPolygons(userID string) ([]models.Polygon, error) {
+	return h.DB.GetPolygons(userID)
+}
