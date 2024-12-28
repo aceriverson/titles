@@ -99,7 +99,7 @@ func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
 	err := d.db.QueryRow("SELECT id, name, pic FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("no user found for given ID")
+			log.Println("no user found for given ID:", userID)
 			return user, errors.New("no user found for GetUser")
 		}
 		log.Println("error querying database:", err)

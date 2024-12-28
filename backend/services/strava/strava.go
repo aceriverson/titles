@@ -121,7 +121,7 @@ func (s *StravaServiceImpl) RenameActivity(user models.UserInternal, activity mo
 		return errors.New("failed to marshal request body")
 	}
 
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
+	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(body))
 	if err != nil {
 		log.Printf("Failed to create request: %v", err)
 		return errors.New("failed to create request")
