@@ -68,6 +68,8 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 		"temperature": 1.3,
 	}
 
+	fmt.Println(requestBody)
+
 	jsonBody, err := json.Marshal(requestBody)
 	if err != nil {
 		log.Printf("Failed to marshal request body: %v", err)
@@ -103,6 +105,8 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 	if err != nil {
 		log.Fatalf("Failed to parse response JSON: %v", err)
 	}
+
+	fmt.Println(response)
 
 	return response.Choices[0].Message.Content, nil
 }
