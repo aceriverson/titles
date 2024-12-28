@@ -20,15 +20,11 @@ type AIServiceImpl struct {
 }
 
 type CompletionResponse struct {
-	Choices []Choice `json:"choices"`
-}
-
-type Choice struct {
-	Message Message `json:"message"`
-}
-
-type Message struct {
-	Content string `json:"content"`
+	Choices []struct {
+		Message struct {
+			Content string `json:"content"`
+		} `json:"message"`
+	} `json:"choices"`
 }
 
 func NewAIService() interfaces.AIService {
@@ -100,8 +96,10 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 		return "", errors.New("failed to read response body")
 	}
 
+	log.Printf("Raw response body: %s", respBody)
+
 	var response CompletionResponse
-	err = json.Unmarshal([]byte(respBody), &response)
+	err = json.Unmarshal(respBody, &response)
 	if err != nil {
 		log.Fatalf("Failed to parse response JSON: %v", err)
 	}
