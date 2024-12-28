@@ -13,12 +13,12 @@ type Activity struct {
 
 type Webhook struct {
 	ObjectType     string            `json:"object_type"`
-	ObjectID       string            `json:"object_id"`
+	ObjectID       int64             `json:"object_id"`
 	AspectType     string            `json:"aspect_type"`
 	Updates        map[string]string `json:"updates"`
-	OwnerID        string            `json:"owner_id"`
-	SubscriptionID string            `json:"subscription_id"`
-	EventTime      string            `json:"event_time"`
+	OwnerID        int64             `json:"owner_id"`
+	SubscriptionID int64             `json:"subscription_id"`
+	EventTime      int64             `json:"event_time"`
 }
 
 type RefreshBody struct {

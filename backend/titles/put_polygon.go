@@ -6,7 +6,7 @@ import (
 	"titles.run/titles/models"
 )
 
-func (h *TitlesCore) PutPolygon(userID string, polygon models.Polygon) error {
+func (h *TitlesCore) PutPolygon(userID int64, polygon models.Polygon) error {
 	fmt.Println(polygon)
 	return h.DB.PutPolygon(userID, polygon)
 }

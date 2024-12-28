@@ -4,6 +4,6 @@ import (
 	"titles.run/titles/models"
 )
 
-func (h *TitlesCore) PostPolygon(userID string, polygon models.Polygon) error {
+func (h *TitlesCore) PostPolygon(userID int64, polygon models.Polygon) error {
 	return h.DB.PostPolygon(userID, polygon)
 }

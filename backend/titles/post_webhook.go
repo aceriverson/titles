@@ -101,6 +101,6 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 	return nil
 }
 
-func (h *TitlesCore) UnauthorizeUser(userID string) error {
+func (h *TitlesCore) UnauthorizeUser(userID int64) error {
 	return h.DB.UnauthorizeUser(userID)
 }

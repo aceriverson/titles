@@ -5,6 +5,7 @@ import (
 	"errors"
 	"log"
 	"os"
+	"strconv"
 	"time"
 
 	"titles.run/services/interfaces"
@@ -51,8 +52,8 @@ func (d *DedupeServiceImpl) Close() {
 	d.rdb.Close()
 }
 
-func (d *DedupeServiceImpl) AddActivity(id string) error {
-	err := d.rdb.Set(ctx, id, "", 10*time.Minute).Err()
+func (d *DedupeServiceImpl) AddActivity(id int64) error {
+	err := d.rdb.Set(ctx, strconv.FormatInt(id, 10), "", 10*time.Minute).Err()
 	if err != nil {
 		log.Printf("Failed to set key: %v\n", err)
 		return errors.New("failed to set key")
@@ -61,8 +62,8 @@ func (d *DedupeServiceImpl) AddActivity(id string) error {
 	return nil
 }
 
-func (d *DedupeServiceImpl) DedupeActivity(id string) (bool, error) {
-	exists, err := d.rdb.Exists(ctx, id).Result()
+func (d *DedupeServiceImpl) DedupeActivity(id int64) (bool, error) {
+	exists, err := d.rdb.Exists(ctx, strconv.FormatInt(id, 10)).Result()
 	if err != nil {
 		log.Printf("Failed to check if key exists: %v\n", err)
 		return false, errors.New("failed to check if key exists")

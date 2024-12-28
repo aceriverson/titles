@@ -1,13 +1,13 @@
 package models
 
 type User struct {
-	ID   string `json:"id"`
+	ID   int64  `json:"id"`
 	Pic  string `json:"pic"`
 	Name string `json:"name"`
 }
 
 type UserInternal struct {
-	ID           string `json:"id"`
+	ID           int64  `json:"id"`
 	Pic          string `json:"pic"`
 	Name         string `json:"name"`
 	AccessToken  string `json:"access_token"`
@@ -21,7 +21,7 @@ type TokenExchangeResponse struct {
 	RefreshToken string `json:"refresh_token"`
 	AccessToken  string `json:"access_token"`
 	Athlete      struct {
-		ID        string `json:"id"`
+		ID        int64  `json:"id"`
 		Firstname string `json:"firstname"`
 		Lastname  string `json:"lastname"`
 		Profile   string `json:"profile"`

@@ -52,7 +52,7 @@ func (d *DBServiceImpl) Close() {
 	d.db.Close()
 }
 
-func (d *DBServiceImpl) DeletePolygon(userID string, polygon models.Polygon) error {
+func (d *DBServiceImpl) DeletePolygon(userID int64, polygon models.Polygon) error {
 	_, err := d.db.Exec("DELETE FROM polygons WHERE user_id = $1 AND id = $2;", userID, polygon.ID)
 	if err != nil {
 		log.Println("error deleting polygon:", err)
@@ -62,7 +62,7 @@ func (d *DBServiceImpl) DeletePolygon(userID string, polygon models.Polygon) err
 	return nil
 }
 
-func (d *DBServiceImpl) GetIntersectingPolygons(userID string, points [][]float64) ([]models.Polygon, error) {
+func (d *DBServiceImpl) GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error) {
 	polystr := "LINESTRING ("
 	for _, p := range points {
 		polystr += fmt.Sprintf("%f %f, ", p[1], p[0])
@@ -93,7 +93,7 @@ func (d *DBServiceImpl) GetIntersectingPolygons(userID string, points [][]float6
 	return polygons, nil
 }
 
-func (d *DBServiceImpl) GetUser(userID string) (models.User, error) {
+func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
 	user := models.User{}
 
 	err := d.db.QueryRow("SELECT id, name, pic FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic)
@@ -109,7 +109,7 @@ func (d *DBServiceImpl) GetUser(userID string) (models.User, error) {
 	return user, nil
 }
 
-func (d *DBServiceImpl) GetUserInternal(userID string) (models.UserInternal, error) {
+func (d *DBServiceImpl) GetUserInternal(userID int64) (models.UserInternal, error) {
 	user := models.UserInternal{}
 
 	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic)
@@ -125,7 +125,7 @@ func (d *DBServiceImpl) GetUserInternal(userID string) (models.UserInternal, err
 	return user, nil
 }
 
-func (d *DBServiceImpl) GetPolygons(userID string) ([]models.Polygon, error) {
+func (d *DBServiceImpl) GetPolygons(userID int64) ([]models.Polygon, error) {
 	rows, err := d.db.Query("SELECT id, name, ST_AsText(geom) AS geom_text FROM polygons WHERE user_id = $1;", userID)
 	if err != nil {
 		log.Println("error querying polygons:", err)
@@ -175,7 +175,7 @@ func (d *DBServiceImpl) NewUser(user models.UserInternal) error {
 	return nil
 }
 
-func (d *DBServiceImpl) PostPolygon(userID string, polygon models.Polygon) error {
+func (d *DBServiceImpl) PostPolygon(userID int64, polygon models.Polygon) error {
 	_, err := d.db.Exec("INSERT INTO polygons (user_id, name, geom) VALUES ($1, $2, $3);", userID, polygon.Name, polygon.ToWKT())
 	if err != nil {
 		log.Println("error inserting polygon:", err)
@@ -185,7 +185,7 @@ func (d *DBServiceImpl) PostPolygon(userID string, polygon models.Polygon) error
 	return nil
 }
 
-func (d *DBServiceImpl) PutPolygon(userID string, polygon models.Polygon) error {
+func (d *DBServiceImpl) PutPolygon(userID int64, polygon models.Polygon) error {
 	_, err := d.db.Exec("UPDATE polygons SET geom = $1 WHERE user_id = $2 AND id = $3;", polygon.ToWKT(), userID, polygon.ID)
 	if err != nil {
 		log.Println("error updating polygon:", err)
@@ -195,7 +195,7 @@ func (d *DBServiceImpl) PutPolygon(userID string, polygon models.Polygon) error 
 	return nil
 }
 
-func (d *DBServiceImpl) UnauthorizeUser(userID string) error {
+func (d *DBServiceImpl) UnauthorizeUser(userID int64) error {
 	_, err := d.db.Exec("DELETE FROM users WHERE user_id = $1;", userID)
 	if err != nil {
 		log.Println("error updating polygon:", err)

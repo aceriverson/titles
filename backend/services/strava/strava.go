@@ -27,8 +27,8 @@ func NewStravaService() interfaces.StravaService {
 	}
 }
 
-func (s *StravaServiceImpl) GetActivity(user models.UserInternal, activityID string) (models.Activity, error) {
-	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%s", activityID)
+func (s *StravaServiceImpl) GetActivity(user models.UserInternal, activityID int64) (models.Activity, error) {
+	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%d", activityID)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		log.Printf("Failed to create request: %v", err)

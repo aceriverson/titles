@@ -10,22 +10,22 @@ type AIService interface {
 
 type DBService interface {
 	Close()
-	DeletePolygon(userID string, polygon models.Polygon) error
-	GetIntersectingPolygons(userID string, points [][]float64) ([]models.Polygon, error)
-	GetUser(userID string) (models.User, error)
-	GetUserInternal(userID string) (models.UserInternal, error)
-	GetPolygons(userID string) ([]models.Polygon, error)
+	DeletePolygon(userID int64, polygon models.Polygon) error
+	GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error)
+	GetUser(userID int64) (models.User, error)
+	GetUserInternal(userID int64) (models.UserInternal, error)
+	GetPolygons(userID int64) ([]models.Polygon, error)
 	NewUser(user models.UserInternal) error
-	PostPolygon(userID string, polygon models.Polygon) error
-	PutPolygon(userID string, polygon models.Polygon) error
-	UnauthorizeUser(userID string) error
+	PostPolygon(userID int64, polygon models.Polygon) error
+	PutPolygon(userID int64, polygon models.Polygon) error
+	UnauthorizeUser(userID int64) error
 	UpdateUser(user models.UserInternal) error
 }
 
 type DedupeService interface {
 	Close()
-	AddActivity(id string) error
-	DedupeActivity(id string) (bool, error)
+	AddActivity(id int64) error
+	DedupeActivity(id int64) (bool, error)
 }
 
 type HereService interface {
@@ -41,7 +41,7 @@ type NtfyService interface {
 }
 
 type StravaService interface {
-	GetActivity(user models.UserInternal, activityID string) (models.Activity, error)
+	GetActivity(user models.UserInternal, activityID int64) (models.Activity, error)
 	RefreshUser(user models.UserInternal) (models.UserInternal, error)
 	RenameActivity(user models.UserInternal, activity models.Activity, update models.Update) error
 	TokenExchange(code string) (models.UserInternal, error)
