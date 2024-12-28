@@ -71,7 +71,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 			return errors.New("failed to generate map")
 		}
 
-		poi, err := h.Here.GetPOI(polyline.Flex, polyline.Points[0])
+		poi, err := h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
 		if err != nil {
 			return errors.New("failed to get poi")
 		}

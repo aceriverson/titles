@@ -30,8 +30,8 @@ func NewHereService() interfaces.HereService {
 	}
 }
 
-func (h *HereServiceImpl) GetPOI(line string, start []float64) ([]string, error) {
-	url := fmt.Sprintf("https://browse.search.hereapi.com/v1/browse?route=%s&limit=10&categories=300-3000-0000,300-3000-0025,300-3000-0030,300-3000-0450,350-3500,350-3510,350-3522,350-3550,550-5510,800-8600-0195,800-8600-0381&apiKey=%s&at=%f,%f", line, h.HereAPIKey, start[0], start[1])
+func (h *HereServiceImpl) GetPOI(line string, at []float64) ([]string, error) {
+	url := fmt.Sprintf("https://browse.search.hereapi.com/v1/browse?route=%s&limit=10&categories=300-3000-0023,300-3000-0025,300-3000-0030,300-3000-0450,350-3500,350-3510,350-3522,350-3550,550-5510,800-8600-0195,800-8600-0381&apiKey=%s&at=%f,%f", line, h.HereAPIKey, at[0], at[1])
 
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
