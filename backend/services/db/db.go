@@ -112,7 +112,7 @@ func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
 func (d *DBServiceImpl) GetUserInternal(userID int64) (models.UserInternal, error) {
 	user := models.UserInternal{}
 
-	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic)
+	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("no user found for given ID")
