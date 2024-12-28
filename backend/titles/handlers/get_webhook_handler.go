@@ -10,17 +10,17 @@ func (h *Handler) GetWebhookHandler() http.HandlerFunc {
 		queryParams := r.URL.Query()
 
 		if err := h.titles.GetWebhook(queryParams.Get("hub.verify_token")); err != nil {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusOK)
-
-			response := map[string]string{
-				"hub.challenge": queryParams.Get("hub.challenge"),
-			}
-
-			json.NewEncoder(w).Encode(response)
+			http.Error(w, "Invalid verification token", http.StatusForbidden)
 			return
 		}
 
-		http.Error(w, "Invalid verification token", http.StatusForbidden)
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+
+		response := map[string]string{
+			"hub.challenge": queryParams.Get("hub.challenge"),
+		}
+
+		json.NewEncoder(w).Encode(response)
 	}
 }
