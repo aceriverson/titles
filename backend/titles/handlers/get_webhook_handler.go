@@ -14,7 +14,7 @@ func (h *Handler) GetWebhookHandler() http.HandlerFunc {
 			w.WriteHeader(http.StatusOK)
 
 			response := map[string]string{
-				"hub.challenge": queryParams.Get("hubChallenge"),
+				"hub.challenge": queryParams.Get("hub.challenge"),
 			}
 
 			json.NewEncoder(w).Encode(response)
