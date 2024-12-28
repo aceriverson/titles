@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TABLE IF NOT EXISTS users (
     id VARCHAR PRIMARY KEY,
     name VARCHAR,
-    pic VARCHAR
+    pic VARCHAR,
     access_token VARCHAR,
 	refresh_token VARCHAR,
 	expires_at BIGINT,
