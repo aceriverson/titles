@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS polygons (
     id SERIAL PRIMARY KEY,
-    user_id VARCHAR REFERENCES users(id),
+    user_id BIGINT REFERENCES users(id),
     name VARCHAR,
     geom geometry(Polygon, 4326)
 );
