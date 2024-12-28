@@ -113,7 +113,7 @@ func (s *StravaServiceImpl) RefreshUser(user models.UserInternal) (models.UserIn
 }
 
 func (s *StravaServiceImpl) RenameActivity(user models.UserInternal, activity models.Activity, update models.Update) error {
-	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%s", activity.ID)
+	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%d", activity.ID)
 
 	body, err := json.Marshal(update)
 	if err != nil {

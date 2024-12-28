@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     access_token VARCHAR,
 	refresh_token VARCHAR,
 	expires_at BIGINT,
-    ai BOOLEAN
+    ai BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS polygons (

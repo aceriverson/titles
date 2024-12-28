@@ -5,7 +5,7 @@ type Map struct {
 }
 
 type Activity struct {
-	ID          string `json:"id"`
+	ID          int64  `json:"id"`
 	Map         Map    `json:"map"`
 	Description string `json:"description"`
 	SportType   string `json:"sport_type"`
