@@ -5,7 +5,6 @@ import (
 	"encoding/base64"
 	"image/color"
 	"image/png"
-	"os"
 
 	sm "github.com/flopp/go-staticmaps"
 	"github.com/golang/geo/s2"
@@ -14,21 +13,15 @@ import (
 )
 
 type MapServiceImpl struct {
-	tileProvider sm.TileProvider
 }
 
 func NewMapService() interfaces.MapService {
-	return &MapServiceImpl{
-		tileProvider: sm.TileProvider{
-			URLPattern: "https://api.mapbox.com/styles/v1/aceriverson/clc3rc6bn000315qbmb44aaaw/tiles/256/%[2]s/%[3]s/%[4]s?access_token=%[5]s&tilesize=600",
-			APIKey:     os.Getenv("MAPBOX_KEY"),
-		},
-	}
+	return &MapServiceImpl{}
 }
 
 func (m *MapServiceImpl) GenerateMap(coords [][]float64) (string, error) {
 	ctx := sm.NewContext()
-	ctx.SetTileProvider(&m.tileProvider)
+	ctx.SetTileProvider(sm.NewTileProviderOpenStreetMaps())
 	ctx.SetSize(720, 720)
 
 	latlngs := make([]s2.LatLng, 0)
