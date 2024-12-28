@@ -164,7 +164,17 @@ func (d *DBServiceImpl) GetPolygons(userID int64) ([]models.Polygon, error) {
 
 func (d *DBServiceImpl) NewUser(user models.UserInternal) error {
 	_, err := d.db.Exec(
-		"INSERT INTO users (id, name, pic, access_token, refresh_token, expires_at) VALUES ($1, $2, $3, $4, $5, $6);",
+		`
+		INSERT INTO users (id, name, pic, access_token, refresh_token, expires_at)
+		VALUES ($1, $2, $3, $4, $5, $6)
+		ON CONFLICT (id) 
+			DO UPDATE 
+			SET name = EXCLUDED.name,
+			pic = EXCLUDED.pic,
+			access_token = EXCLUDED.access_token,
+			refresh_token = EXCLUDED.refresh_token,
+			expires_at = EXCLUDED.expires_at;
+		`,
 		user.ID, user.Name, user.Pic, user.AccessToken, user.RefreshToken, user.ExpiresAt,
 	)
 	if err != nil {

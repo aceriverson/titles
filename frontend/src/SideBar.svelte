@@ -46,10 +46,7 @@
             <div class="close-sidebar">
                 <i class="ri-arrow-right-s-line" on:click={toggleSideBar} on:keypress={toggleSideBar}></i>
                 <div style="display: flex; align-items: center; font-family: monospace; margin-right: 5px;">
-                    iver.sn/
-                    <div style="font-size:24px; margin-top: 5px;">
-                        titles
-                    </div>
+                    titles.run/
                 </div>
             </div>
             <div class="location-search">
