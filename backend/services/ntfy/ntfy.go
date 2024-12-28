@@ -25,7 +25,7 @@ func NewNtfyService() interfaces.NtfyService {
 func (n *NtfyServiceImpl) Notify(user models.UserInternal, activity models.Activity, update models.Update) error {
 	url := fmt.Sprintf("https://ntfy.sh/%s", n.NtfyChannel)
 
-	body := fmt.Sprintf("%s - %s - %s", user.ID, activity.ID, update.Name)
+	body := fmt.Sprintf("%d - %d - %s", user.ID, activity.ID, update.Name)
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer([]byte(body)))
 	if err != nil {
