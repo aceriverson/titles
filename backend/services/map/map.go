@@ -32,7 +32,17 @@ func (m *MapServiceImpl) GenerateMap(coords [][]float64) (string, error) {
 	ctx.AddObject(
 		sm.NewPath(
 			latlngs,
-			color.RGBA{252, 82, 0, 1},
+			color.RGBA{252, 82, 0, 255},
+			3,
+		),
+	)
+
+	ctx.AddObject(
+		sm.NewCircle(
+			latlngs[len(latlngs)-1],
+			color.RGBA{252, 82, 0, 255},
+			color.RGBA{255, 0, 0, 255},
+			80,
 			3,
 		),
 	)
@@ -40,20 +50,10 @@ func (m *MapServiceImpl) GenerateMap(coords [][]float64) (string, error) {
 	ctx.AddObject(
 		sm.NewCircle(
 			latlngs[0],
-			color.RGBA{0, 255, 0, 1},
-			color.RGBA{0, 255, 0, 1},
+			color.RGBA{252, 82, 0, 255},
+			color.RGBA{0, 255, 0, 255},
 			80,
-			0,
-		),
-	)
-
-	ctx.AddObject(
-		sm.NewCircle(
-			latlngs[len(latlngs)-1],
-			color.RGBA{255, 0, 0, 1},
-			color.RGBA{255, 0, 0, 1},
-			80,
-			0,
+			3,
 		),
 	)
 
