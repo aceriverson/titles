@@ -69,7 +69,7 @@ func (d *DBServiceImpl) GetIntersectingPolygons(userID int64, points [][]float64
 	}
 	polystr = polystr[:len(polystr)-2] + ")"
 
-	rows, err := d.db.Query("WITH input_linestring AS (SELECT ST_GeomFromText($1, 4326) AS geom) SELECT polygons.name as name FROM polygons JOIN input_linestring ON ST_Intersects(input_linestring.geom, polygons.geom) WHERE user_id=$2 ORDER BY ST_LineLocatePoint(input_linestring.geom, ST_StartPoint(polygons.geom)) DESC;", polystr, userID)
+	rows, err := d.db.Query("WITH input_linestring AS (SELECT ST_GeomFromText($1, 4326) AS geom) SELECT polygons.name as name FROM polygons JOIN input_linestring ON ST_Intersects(input_linestring.geom, polygons.geom) WHERE user_id=$2 ORDER BY ST_LineLocatePoint(input_linestring.geom, ST_StartPoint(polygons.geom));", polystr, userID)
 	if err != nil {
 		log.Println("error querying polygons:", err)
 		return nil, err
@@ -115,7 +115,7 @@ func (d *DBServiceImpl) GetUserInternal(userID int64) (models.UserInternal, erro
 	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			log.Println("no user found for given ID")
+			log.Println("no user found for given ID:", userID)
 			return user, errors.New("no user found for GetUser")
 		}
 		log.Println("error querying database:", err)
