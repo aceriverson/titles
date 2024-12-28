@@ -48,16 +48,18 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 			},
 			{
 				"role": "user",
-				"content": map[string]interface{}{
-					"type": "image_url",
-					"image_url": map[string]interface{}{
-						"url": routeMap,
+				"content": []map[string]interface{}{
+					{
+						"type": "image_url",
+						"image_url": map[string]interface{}{
+							"url": "data:image/png;base64," + routeMap,
+						},
+					},
+					{
+						"type": "text",
+						"text": fmt.Sprintf("Generate a route title for the following activity:\n\n- **Activity Type:** %s\n- **Points of Interest:** %s\n- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n- **User-Supplied Titles:** %s\n\nProvide a concise and descriptive route title based on the inputs.", sport, strings.Join(poi, ", "), strings.Join(polygonNames, ", ")),
 					},
 				},
-			},
-			{
-				"role":    "user",
-				"content": fmt.Sprintf("Generate a route title for the following activity:\n\n- **Activity Type:** %s\n- **Points of Interest:** %s\n- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n- **User-Supplied Titles:** %s\n\nProvide a concise and descriptive route title based on the inputs.", sport, strings.Join(poi, ", "), strings.Join(polygonNames, ", ")),
 			},
 		},
 		"max_tokens":  300,
