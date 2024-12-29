@@ -144,15 +144,12 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 		return "", errors.New("failed to read response body")
 	}
 
-	log.Printf("Raw response body: %s", respBody)
-
 	var response CompletionResponse
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
-		log.Fatalf("Failed to parse response JSON: %v", err)
+		log.Printf("Failed to parse response JSON: %v", err)
+		return "", errors.New("failed to parse response JSON")
 	}
-
-	fmt.Println(response)
 
 	return response.Choices[0].Message.Content, nil
 }

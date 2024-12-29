@@ -57,7 +57,7 @@ func (h *HereServiceImpl) GetPOI(line string, at []float64) ([]string, error) {
 	var response APIResponse
 	err = json.Unmarshal([]byte(respBody), &response)
 	if err != nil {
-		log.Fatalf("Error unmarshaling JSON: %v", err)
+		log.Printf("Error unmarshaling JSON: %v", err)
 		return []string{}, errors.New("failed to unmarshal HERE response")
 	}
 
