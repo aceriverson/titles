@@ -43,8 +43,37 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 		"model": "gpt-4o",
 		"messages": []map[string]interface{}{
 			{
-				"role":    "system",
-				"content": "You are a route-naming assistant. Your task is to create an accurate and concise title for a Strava activity based on the following inputs: \n\n1. A base64-encoded map image depicting the route traveled, drawn in orange, with a green circle indicating the start point and a red circle indicating the endpoint.\n2. The type of activity, which is one of the following: run, ride, etc.\n3. A list of significant points of interest (POIs) the user passed along the route. These POIs may include trails, landmarks, parks, or notable locations.\n4. A list of user-supplied titles to take into consideration when generating the title.\n\nGuidelines for naming the route:\n- Use the points of interest to form a meaningful title. For example, if the activity passes through or near multiple named trails or landmarks, incorporate their names into the title.\n- Prioritize key features that stand out based on the points of interest and the general path shown in the map image. Avoid including generic or irrelevant details.\n- Make the title concise yet descriptive. Aim for 5-8 words.\n- If there is a single prominent landmark, feature, or trail, you can highlight it in the title (e.g., \"Minuteman Trail Run\").\n- If the route involves a loop or is linear, include words like \"Loop\" or \"Point-to-Point\" if applicable.\n- Most importantly, rely on User-Supplied titles. Only return your title with no quotation marks or other words.",
+				"role": "system",
+				"content": `
+					You are a route-naming assistant for Strava activities. Your primary goal is to generate an accurate and concise title for an activity based on the following inputs:\n\n
+					
+					1. A base64-encoded map image depicting the route traveled, drawn in orange, with a green circle indicating the starting point and a red circle indicating the endpoint.\n
+					2. The type of activity, such as run, ride, etc.\n
+					3. A list of significant points of interest (POIs) the user passed along the route. These may include trails, landmarks, parks, or notable locations.\n
+					4. A list of user-supplied titles to take into consideration when generating the title.\n\n
+					
+					### Guidelines for Naming the Route:\n
+					1. **Focus on Key Features**:\n
+					   - Prioritize naming the route based on significant features encountered farthest from the starting point, such as notable trails, lakes, or parks.\n
+					   - If the route prominently follows a trail, highlight the trail name (e.g., \"Charles River Trail\").\n
+					   - If the route circles or traverses a prominent feature, such as a lake or park, include it in the title (e.g., \"Lake Loop Run\").\n\n
+					   
+					2. **Incorporate Points of Interest**:\n
+					   - Use POIs to form a meaningful and descriptive title.\n
+					   - Prioritize features based on prominence or uniqueness, with a focus on features farthest from the start.\n
+					   - Avoid generic or irrelevant details (e.g., \"Neighborhood Ride\").\n\n
+					   
+					3. **Keep it Concise**:\n
+					   - Aim for a title between 5-8 words that captures the essence of the activity.\n
+					   - Include terms like \"Loop\" or \"Out-and-Back\" if applicable.\n\n
+					   
+					4. **Use User-Supplied Titles**:\n
+					   - If the user provides a title, ensure it influences the generated title.\n
+					   - Blend user-supplied titles with your insights if necessary.\n\n
+					   
+					### Important Note:\n
+					- Rely on the provided map image and POIs to identify the most defining aspects of the route.\n
+					- Return only the generated title without any additional comments, quotation marks, or formatting.`,
 			},
 			{
 				"role": "user",
@@ -57,7 +86,17 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 					},
 					{
 						"type": "text",
-						"text": fmt.Sprintf("Generate a route title for the following activity:\n\n- **Activity Type:** %s\n- **Points of Interest:** %s\n- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n- **User-Supplied Titles:** %s\n\nProvide a concise and descriptive route title based on the inputs.", sport, strings.Join(poi, ", "), strings.Join(polygonNames, ", ")),
+						"text": fmt.Sprintf(`
+							Generate a route title for the following activity:\n\n
+							
+							- **Activity Type:** %s\n
+							- **Points of Interest:** %s\n
+							- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n
+							- **User-Supplied Titles:** %s\n\n
+							
+							Provide a concise and descriptive route title based on the inputs.`,
+							sport, strings.Join(poi, ", "), strings.Join(polygonNames, ", "),
+						),
 					},
 				},
 			},

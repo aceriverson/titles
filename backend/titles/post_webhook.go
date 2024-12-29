@@ -62,7 +62,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 	} else if user.AI {
 		if update.Description == "" {
 			update.Description = "Titled via titles․run/ai"
-		} else if update.Description != "Titled via titles․run" {
+		} else {
 			update.Description += "\n\nTitled via titles․run/ai"
 		}
 
