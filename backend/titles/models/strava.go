@@ -4,11 +4,16 @@ type Map struct {
 	Polyline string `json:"polyline"`
 }
 
+type SegmentEffort struct {
+	Name string `json:"name"`
+}
+
 type Activity struct {
-	ID          int64  `json:"id"`
-	Map         Map    `json:"map"`
-	Description string `json:"description"`
-	SportType   string `json:"sport_type"`
+	ID             int64           `json:"id"`
+	Map            Map             `json:"map"`
+	Description    string          `json:"description"`
+	SegmentEfforts []SegmentEffort `json:"segment_efforts"`
+	SportType      string          `json:"sport_type"`
 }
 
 type Webhook struct {

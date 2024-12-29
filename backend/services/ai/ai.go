@@ -33,10 +33,15 @@ func NewAIService() interfaces.AIService {
 	}
 }
 
-func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
+func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
 	polygonNames := make([]string, len(polygons))
 	for i, polygon := range polygons {
 		polygonNames[i] = polygon.Name
+	}
+
+	segmentEfforts := make([]string, len(activity.SegmentEfforts))
+	for i, segment := range activity.SegmentEfforts {
+		segmentEfforts[i] = segment.Name
 	}
 
 	requestBody := map[string]interface{}{
@@ -49,8 +54,9 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 					
 					1. A base64-encoded map image depicting the route traveled, drawn in orange, with a green circle indicating the starting point and a red circle indicating the endpoint.\n
 					2. The type of activity, such as run, ride, etc.\n
-					3. A list of significant points of interest (POIs) the user passed along the route. These may include trails, landmarks, parks, or notable locations.\n
-					4. A list of user-supplied titles to take into consideration when generating the title.\n\n
+					3. A list of the segment names traversed during the activity. These are user generated, but can help identify the local name of the route.\n
+					4. A list of significant points of interest (POIs) the user passed along the route. These may include trails, landmarks, parks, or notable locations.\n
+					5. A list of user-supplied titles to take into consideration when generating the title.\n\n
 					
 					### Guidelines for Naming the Route:\n
 					1. **Focus on Key Features**:\n
@@ -90,12 +96,13 @@ func (a *AIServiceImpl) Title(sport string, polygons []models.Polygon, routeMap 
 							Generate a route title for the following activity:\n\n
 							
 							- **Activity Type:** %s\n
+							- **Segment Names:** %s\n
 							- **Points of Interest:** %s\n
 							- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n
 							- **User-Supplied Titles:** %s\n\n
 							
 							Provide a concise and descriptive route title based on the inputs.`,
-							sport, strings.Join(poi, ", "), strings.Join(polygonNames, ", "),
+							activity.SportType, strings.Join(segmentEfforts, ", "), strings.Join(poi, ", "), strings.Join(polygonNames, ", "),
 						),
 					},
 				},

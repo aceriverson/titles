@@ -76,7 +76,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 			return errors.New("failed to get poi")
 		}
 
-		title, err := h.AI.Title(activity.SportType, polygons, routeMap, poi)
+		title, err := h.AI.Title(activity, polygons, routeMap, poi)
 		if err != nil {
 			return errors.New("failed to get title")
 		}

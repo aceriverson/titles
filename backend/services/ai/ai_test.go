@@ -31,7 +31,13 @@ func TestAIServiceImpl_Title(t *testing.T) {
 
 	service := NewAIService()
 
-	sport := "run"
+	activity := models.Activity{
+		SportType: "run",
+		SegmentEfforts: []models.SegmentEffort{
+			{Name: "Central Park Loop"},
+			{Name: "Central Park East"},
+		},
+	}
 	polygons := []models.Polygon{
 		{Name: "Central Park"},
 		{Name: "Harlem River Greenway"},
@@ -39,7 +45,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	routeMap := "data:image/png;base64,FAKE_BASE64_DATA"
 	poi := []string{"Central Park", "Harlem River"}
 
-	title, err := service.Title(sport, polygons, routeMap, poi)
+	title, err := service.Title(activity, polygons, routeMap, poi)
 	if err != nil {
 		t.Fatalf("Title method returned an error: %v", err)
 	}
