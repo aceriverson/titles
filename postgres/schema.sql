@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
-CREATE TYPE IF NOT EXISTS plan AS ENUM ('none', 'free', 'pro');
+CREATE TYPE plan AS ENUM ('none', 'free', 'pro');
 
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY,
