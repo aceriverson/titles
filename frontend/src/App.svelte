@@ -25,6 +25,7 @@
 				const data = await response.json();
 				return data;
 			} catch {
+				localStorage.setItem('token', null);
 				return null;
 			}
 		};
