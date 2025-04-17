@@ -16,7 +16,8 @@ import (
 )
 
 type AIServiceImpl struct {
-	OpenAIKey string
+	AIURL    string
+	AIAPIKey string
 }
 
 type CompletionResponse struct {
@@ -29,7 +30,8 @@ type CompletionResponse struct {
 
 func NewAIService() interfaces.AIService {
 	return &AIServiceImpl{
-		OpenAIKey: os.Getenv("OPENAI_KEY"),
+		AIURL:    os.Getenv("AI_URL"),
+		AIAPIKey: os.Getenv("AI_API_KEY"),
 	}
 }
 
@@ -45,7 +47,23 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 	}
 
 	requestBody := map[string]interface{}{
-		"model": "gpt-4o",
+		"model": "meta-llama/llama-4-maverick:free",
+		"extra_body": map[string]interface{}{
+			"models": []string{
+				"meta-llama/llama-4-scout:free",
+				"qwen/qwen2.5-vl-3b-instruct:free",
+				"qwen/qwen2.5-vl-32b-instruct:free",
+				"mistralai/mistral-small-3.1-24b-instruct:free",
+				"google/gemma-3-1b-it:free",
+				"google/gemma-3-4b-it:free",
+				"google/gemma-3-12b-it:free",
+				"google/gemma-3-27b-it:free",
+				"qwen/qwen2.5-vl-72b-instruct:free",
+				"qwen/qwen-2.5-vl-7b-instruct:free",
+				"google/gemini-flash-1.5-8b-exp",
+				"google/gemma-3-4b-it",
+			},
+		},
 		"messages": []map[string]interface{}{
 			{
 				"role": "system",
@@ -62,7 +80,7 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 					1. **Focus on Key Features**:\n
 					   - Prioritize naming the route based on significant features encountered farthest from the starting point, such as notable trails, lakes, or parks.\n
 					   - If the route prominently follows a trail, highlight the trail name (e.g., \"Charles River Trail\").\n
-					   - If the route circles or traverses a prominent feature, such as a lake or park, include it in the title (e.g., \"Lake Loop Run\").\n\n
+					   - If the route circles or traverses a prominent feature, such as a lake or park, include it in the title (e.g., \"Lake Loop\").\n\n
 					   
 					2. **Incorporate Points of Interest**:\n
 					   - Use POIs to form a meaningful and descriptive title.\n
@@ -101,7 +119,7 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 							- **Map Description:** The route is drawn in orange on the map, starting at a green circle and ending at a red circle.\n
 							- **User-Supplied Titles:** %s\n\n
 							
-							Provide a concise and descriptive route title based on the inputs.`,
+							Provide a concise and descriptive route title based on the inputs. Remember, User-Supplied titles are the most important input.`,
 							activity.SportType, strings.Join(segmentEfforts, ", "), strings.Join(poi, ", "), strings.Join(polygonNames, ", "),
 						),
 					},
@@ -120,7 +138,7 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 		return "", errors.New("failed to marshal request body")
 	}
 
-	url := "https://api.openai.com/v1/chat/completions"
+	url := a.AIURL
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonBody))
 	if err != nil {
 		log.Printf("Failed to create request: %v", err)
@@ -128,7 +146,7 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.OpenAIKey))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.AIAPIKey))
 
 	client := &http.Client{}
 	resp, err := client.Do(req)

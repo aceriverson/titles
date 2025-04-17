@@ -1,5 +1,7 @@
 CREATE EXTENSION IF NOT EXISTS postgis;
 
+CREATE TYPE IF NOT EXISTS plan AS ENUM ('none', 'free', 'pro');
+
 CREATE TABLE IF NOT EXISTS users (
     id BIGINT PRIMARY KEY,
     name VARCHAR,
@@ -7,7 +9,8 @@ CREATE TABLE IF NOT EXISTS users (
     access_token VARCHAR,
 	refresh_token VARCHAR,
 	expires_at BIGINT,
-    ai BOOLEAN DEFAULT FALSE
+    ai BOOLEAN DEFAULT FALSE,
+    plan plan DEFAULT 'none',
 );
 
 CREATE TABLE IF NOT EXISTS polygons (

@@ -112,7 +112,7 @@ func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
 func (d *DBServiceImpl) GetUserInternal(userID int64) (models.UserInternal, error) {
 	user := models.UserInternal{}
 
-	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI)
+	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai, plan FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI, &user.Plan)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("no user found for given ID:", userID)
@@ -208,7 +208,7 @@ func (d *DBServiceImpl) PutPolygon(userID int64, polygon models.Polygon) error {
 func (d *DBServiceImpl) UnauthorizeUser(userID int64) error {
 	_, err := d.db.Exec("DELETE FROM users WHERE user_id = $1;", userID)
 	if err != nil {
-		log.Println("error updating polygon:", err)
+		log.Println("error deleting user:", err)
 		return err
 	}
 
