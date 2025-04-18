@@ -47,7 +47,7 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 	}
 
 	requestBody := map[string]interface{}{
-		"model": "google/gemma-3-4b-it:free",
+		"model": "google/gemma-3-27b-it:free",
 		"extra_body": map[string]interface{}{
 			"models": []string{
 				"meta-llama/llama-4-maverick:free",
