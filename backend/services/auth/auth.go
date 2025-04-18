@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
-	"strings"
+	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 )
@@ -15,25 +15,27 @@ type CustomClaims struct {
 }
 
 func CreateJWT(userID int64) (string, error) {
+	expirationTime := time.Now().Add(72 * time.Hour)
+
 	claims := &CustomClaims{
 		UserID: userID,
-	}
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	jwtSecret := os.Getenv("JWT_SECRET_KEY")
-	tokenString, err := token.SignedString([]byte(jwtSecret))
-	if err != nil {
-		return "", err
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(expirationTime),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		},
 	}
 
-	return tokenString, nil
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	jwtSecret := os.Getenv("JWT_SECRET_KEY")
+	return token.SignedString([]byte(jwtSecret))
 }
 
 func ExtractJWT(r *http.Request) (string, error) {
-	jwt := r.Header.Get("Authorization")
-	if jwt == "" {
-		return "", errors.New("no authorization header found in request")
+	cookie, err := r.Cookie("jwt")
+	if err != nil {
+		return "", errors.New("jwt cookie not found")
 	}
-	return strings.Split(jwt, " ")[1], nil
+	return cookie.Value, nil
 }
 
 func ValidateJWT(token string) (int64, error) {

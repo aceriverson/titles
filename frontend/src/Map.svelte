@@ -20,13 +20,10 @@
     let currentPolygonEvent; 
 
     const loadPolygons = async () => {
-        const token = localStorage.getItem('token');
         let polygons;
         try {
             const response = await fetch('/api/polygons', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                credentials: 'include'
             });
             polygons = await response.json();
         } catch {
@@ -86,12 +83,11 @@
         data.points.push(data.points[0]);
         console.log(data);
 
-        const token = localStorage.getItem('token');
         fetch('/api/polygon', 
             {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
@@ -110,11 +106,10 @@
             };
             console.log(data);
 
-            const token = localStorage.getItem('token');
             fetch('/api/polygon', {
                 method: 'DELETE',
+                credentials: 'include',
                 headers: {
-                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),
@@ -177,11 +172,10 @@
                 data.points.push(data.points[0]);
                 console.log(data);
 
-                const token = localStorage.getItem('token');
                 fetch('/api/polygon', {
                     method: 'PUT',
+                    credentials: 'include',
                     headers: {
-                        'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify(data),

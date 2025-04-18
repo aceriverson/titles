@@ -6,26 +6,14 @@
 	import { user } from './stores.js';
 
 	onMount(async () => {
-		// Check for the token in the URL and save it to localStorage if it exists
-		const urlParams = new URLSearchParams(window.location.search);
-		const token = urlParams.get('token');
-		if (token) {
-			localStorage.setItem('token', token);
-			history.replaceState(null, '', window.location.pathname);
-		}
-
 		const fetchUser = async () => {
-			const token = localStorage.getItem('token');
 			try {
 				const response = await fetch('/api/user', {
-					headers: {
-						Authorization: `Bearer ${token}`
-					}
+					credentials: 'include'
 				});
 				const data = await response.json();
 				return data;
 			} catch {
-				localStorage.setItem('token', null);
 				return null;
 			}
 		};

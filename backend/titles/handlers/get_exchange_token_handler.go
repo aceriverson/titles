@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
 
 	titlesErrors "titles.run/services/errors"
@@ -26,7 +25,18 @@ func (h *Handler) GetExchangeTokenHandler() http.HandlerFunc {
 			return
 		}
 
-		redirectURL := fmt.Sprintf("https://%s/?token=%s", os.Getenv("HOST"), url.QueryEscape(jwt))
-		http.Redirect(w, r, redirectURL, http.StatusFound)
+		http.SetCookie(w, &http.Cookie{
+			Name:     "jwt",
+			Value:    jwt,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   259200,
+		})
+
+		redirectURL := fmt.Sprintf("https://%s/", os.Getenv("HOST"))
+		w.Header().Set("Location", redirectURL)
+		w.WriteHeader(http.StatusFound)
 	}
 }

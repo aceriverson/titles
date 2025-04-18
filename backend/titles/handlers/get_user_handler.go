@@ -10,16 +10,16 @@ import (
 
 func (h *Handler) GetUserHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		jwt, err := auth.ExtractJWT(r)
+		cookie, err := r.Cookie("jwt")
 		if err != nil {
-			log.Println(err)
+			log.Println("JWT cookie not found:", err)
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
 
-		userID, err := auth.ValidateJWT(jwt)
+		userID, err := auth.ValidateJWT(cookie.Value)
 		if err != nil {
-			log.Println(err)
+			log.Println("Invalid JWT:", err)
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
