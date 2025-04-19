@@ -10,9 +10,10 @@
     }
 
     function handleLogout(event) {
-		event.preventDefault(); // Prevent the default link behavior
-		localStorage.removeItem('token'); // Clear the token from localStorage
-		location.reload(); // Refresh the page
+		event.preventDefault();
+		fetch('/api/logout', {
+            method: 'POST',
+        });
 	}
 
     let searchTerm = "";

@@ -24,6 +24,7 @@ func RegisterHandlers(titles *titles.TitlesCore) {
 	http.Handle("GET /polygons", handler.GetPolygonsHandler())
 
 	http.Handle("GET /user", handler.GetUserHandler())
+	http.Handle("POST /logout", handler.PostLogoutHandler())
 
 	http.Handle("GET /webhook", handler.GetWebhookHandler())
 	http.Handle("POST /webhook", handler.PostWebhookHandler())
