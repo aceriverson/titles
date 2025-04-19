@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 	refresh_token VARCHAR,
 	expires_at BIGINT,
     ai BOOLEAN DEFAULT FALSE,
-    plan plan DEFAULT 'none',
+    plan plan DEFAULT 'none'
 );
 
 CREATE TABLE IF NOT EXISTS polygons (

@@ -15,7 +15,15 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - svelte_build:/app/build
+      - frontend_build:/app/dist
+    command: sh -c "npm install && npm run build"
+
+  polygons:
+    build:
+      context: ./polygons
+      dockerfile: Dockerfile
+    volumes:
+      - polygons_build:/app/build
     command: sh -c "npm install && npm run build && cp -r public/* build/"
 
   postgres:
@@ -35,19 +43,21 @@ services:
     volumes:
       - redis_data:/data
 
-  nginx:
-    image: nginx:latest
+  caddy:
+    image: caddy:latest
     ports:
       - "8080:80"
     volumes:
-      - svelte_build:/usr/share/nginx/html
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/default.conf/:/etc/nginx/conf.d/default.conf:ro
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - frontend_build:/srv/frontend
+      - polygons_build:/srv/polygons
     depends_on:
-      - frontend
       - backend
+      - frontend
+      - polygons
 
 volumes:
   postgres_data:
   redis_data:
-  svelte_build:
+  polygons_build:
+  frontend_build:

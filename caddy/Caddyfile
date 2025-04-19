@@ -1,0 +1,18 @@
+http://:80
+
+@noTrailingSlash path /polygons
+redir @noTrailingSlash /polygons/
+
+handle_path /api/* {
+	reverse_proxy backend:8080
+}
+
+handle_path /polygons/* {
+	root * /srv/polygons
+	file_server
+}
+
+handle {
+	root * /srv/frontend
+	file_server
+}
