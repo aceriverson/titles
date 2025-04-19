@@ -14,6 +14,7 @@
 		fetch('/api/logout', {
             method: 'POST',
         });
+        user.set(null);
 	}
 
     let searchTerm = "";
