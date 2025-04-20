@@ -10,6 +10,15 @@ services:
     env_file:
       - .env
 
+  webhook:
+    build:
+      context: ./webhook
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
   frontend:
     build:
       context: ./frontend
@@ -53,6 +62,7 @@ services:
       - polygons_build:/srv/polygons
     depends_on:
       - backend
+      - webhook
       - frontend
       - polygons
 

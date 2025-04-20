@@ -15,6 +15,7 @@
             method: 'POST',
         });
         user.set(null);
+        toggleSideBar();
 	}
 
     let searchTerm = "";

@@ -3,6 +3,10 @@ http://:80
 @noTrailingSlash path /polygons
 redir @noTrailingSlash /polygons/
 
+handle_path /api/webhook {
+	reverse_proxy webhook:8080
+}
+
 handle_path /api/* {
 	reverse_proxy backend:8080
 }
