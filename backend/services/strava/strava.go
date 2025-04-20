@@ -27,39 +27,6 @@ func NewStravaService() interfaces.StravaService {
 	}
 }
 
-func (s *StravaServiceImpl) GetActivity(user models.UserInternal, activityID int64) (models.Activity, error) {
-	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%d", activityID)
-	req, err := http.NewRequest("GET", url, nil)
-	if err != nil {
-		log.Printf("Failed to create request: %v", err)
-		return models.Activity{}, errors.New("failed to create request")
-	}
-
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.AccessToken))
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Failed to make request: %v", err)
-		return models.Activity{}, errors.New("failed to make request")
-	}
-	defer resp.Body.Close()
-
-	respBody, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Printf("Failed to read response body: %v", err)
-		return models.Activity{}, errors.New("failed to read response body")
-	}
-
-	var activity models.Activity
-	if err := json.Unmarshal(respBody, &activity); err != nil {
-		log.Printf("Failed to unmarshal response: %v", err)
-		return models.Activity{}, err
-	}
-
-	return activity, nil
-}
-
 func (s *StravaServiceImpl) RefreshUser(user models.UserInternal) (models.UserInternal, error) {
 	if user.ExpiresAt >= time.Now().Unix() {
 		return user, nil
@@ -110,40 +77,6 @@ func (s *StravaServiceImpl) RefreshUser(user models.UserInternal) (models.UserIn
 	user.UpdateToken(refreshedToken)
 
 	return user, nil
-}
-
-func (s *StravaServiceImpl) RenameActivity(user models.UserInternal, activity models.Activity, update models.Update) error {
-	url := fmt.Sprintf("https://www.strava.com/api/v3/activities/%d", activity.ID)
-
-	body, err := json.Marshal(update)
-	if err != nil {
-		log.Printf("Failed to marshal request body: %v", err)
-		return errors.New("failed to marshal request body")
-	}
-
-	req, err := http.NewRequest("PUT", url, bytes.NewBuffer(body))
-	if err != nil {
-		log.Printf("Failed to create request: %v", err)
-		return errors.New("failed to create request")
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", user.AccessToken))
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Printf("Failed to make request: %v", err)
-		return errors.New("failed to make request")
-	}
-	if resp.StatusCode != http.StatusOK {
-		log.Printf("Failed to rename activity: %v", resp.StatusCode)
-		return errors.New("failed to rename activity")
-	}
-
-	defer resp.Body.Close()
-
-	return nil
 }
 
 func (s *StravaServiceImpl) TokenExchange(code string) (models.UserInternal, error) {

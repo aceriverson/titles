@@ -2,6 +2,8 @@
     import { slide } from 'svelte/transition';
     import { showMapTools, mapLocation, user } from './stores.js';
 
+    const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=110809&response_type=code&redirect_uri=${process.env.HOST}/api/exchange_token&approval_prompt=auto&scope=activity:write,activity:read_all`;
+
     let sideBarOpen = false;
 
     function toggleSideBar() {
@@ -78,7 +80,7 @@
             </div>
         {:else}
             <div class="ctxwstrava-container">
-                <a href="https://www.strava.com/oauth/authorize?client_id=110809&response_type=code&redirect_uri=https://titles.run/api/exchange_token&approval_prompt=auto&scope=activity:write,activity:read_all">
+                <a href={stravaAuthUrl}>
                     <img src="./ctxwstrava.png" class="ctxwstrava" alt="Connect with Strava">
                 </a>
             </div>

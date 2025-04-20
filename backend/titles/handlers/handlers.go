@@ -15,8 +15,6 @@ func RegisterHandlers(titles *titles.TitlesCore) {
 
 	http.Handle("GET /exchange_token", handler.GetExchangeTokenHandler())
 
-	http.Handle("/webhook", handler.WebhookHandler())
-
 	http.Handle("DELETE /polygon", handler.DeletePolygonHandler())
 	http.Handle("POST /polygon", handler.PostPolygonHandler())
 	http.Handle("PUT /polygon", handler.PutPolygonHandler())
@@ -25,7 +23,4 @@ func RegisterHandlers(titles *titles.TitlesCore) {
 
 	http.Handle("GET /user", handler.GetUserHandler())
 	http.Handle("POST /logout", handler.PostLogoutHandler())
-
-	http.Handle("GET /webhook", handler.GetWebhookHandler())
-	http.Handle("POST /webhook", handler.PostWebhookHandler())
 }
