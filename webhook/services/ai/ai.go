@@ -130,8 +130,6 @@ func (a *AIServiceImpl) Title(activity models.Activity, polygons []models.Polygo
 		"temperature": 1.3,
 	}
 
-	fmt.Println(requestBody)
-
 	jsonBody, err := json.Marshal(requestBody)
 	if err != nil {
 		log.Printf("Failed to marshal request body: %v", err)
