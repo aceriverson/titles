@@ -13,6 +13,6 @@ type Handler struct {
 func RegisterHandlers(titles *titles.TitlesCore) {
 	handler := &Handler{titles}
 
-	http.Handle("GET /webhook", handler.GetWebhookHandler())
-	http.Handle("POST /webhook", handler.PostWebhookHandler())
+	http.Handle("GET /", handler.GetWebhookHandler())
+	http.Handle("POST /", handler.PostWebhookHandler())
 }
