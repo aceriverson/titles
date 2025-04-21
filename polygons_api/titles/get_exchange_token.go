@@ -1,7 +1,7 @@
 package titles
 
 import (
-	"titles.run/services/auth"
+	"titles.run/auth"
 	"titles.run/services/errors"
 )
 

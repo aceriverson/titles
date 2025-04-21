@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"titles.run/services/auth"
+	"titles.run/auth"
 )
 
 func (h *Handler) GetPolygonsHandler() http.HandlerFunc {

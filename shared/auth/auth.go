@@ -2,7 +2,6 @@ package auth
 
 import (
 	"errors"
-	"net/http"
 	"os"
 	"time"
 
@@ -28,14 +27,6 @@ func CreateJWT(userID int64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	jwtSecret := os.Getenv("JWT_SECRET_KEY")
 	return token.SignedString([]byte(jwtSecret))
-}
-
-func ExtractJWT(r *http.Request) (string, error) {
-	cookie, err := r.Cookie("jwt")
-	if err != nil {
-		return "", errors.New("jwt cookie not found")
-	}
-	return cookie.Value, nil
 }
 
 func ValidateJWT(token string) (int64, error) {
