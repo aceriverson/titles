@@ -8,7 +8,7 @@
 	onMount(async () => {
 		const fetchUser = async () => {
 			try {
-				const response = await fetch('/api/user', {
+				const response = await fetch('/api/polygons/user', {
 					credentials: 'include'
 				});
 				const data = await response.json();

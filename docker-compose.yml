@@ -1,9 +1,9 @@
 version: '3.8'
 
 services:
-  backend:
+  polygons_api:
     build:
-      context: ./backend
+      context: ./polygons_api
       dockerfile: Dockerfile
     depends_on:
       - postgres
@@ -63,7 +63,7 @@ services:
       - frontend_build:/srv/frontend
       - polygons_build:/srv/polygons
     depends_on:
-      - backend
+      - polygons_api
       - webhook
       - frontend
       - polygons

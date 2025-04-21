@@ -22,7 +22,7 @@
     const loadPolygons = async () => {
         let polygons;
         try {
-            const response = await fetch('/api/polygons', {
+            const response = await fetch('/api/polygons/polygons', {
                 credentials: 'include'
             });
             polygons = await response.json();
@@ -83,7 +83,7 @@
         data.points.push(data.points[0]);
         console.log(data);
 
-        fetch('/api/polygon', 
+        fetch('/api/polygons/polygon', 
             {
                 method: 'POST',
                 credentials: 'include',
@@ -106,7 +106,7 @@
             };
             console.log(data);
 
-            fetch('/api/polygon', {
+            fetch('/api/polygons/polygon', {
                 method: 'DELETE',
                 credentials: 'include',
                 headers: {
@@ -172,7 +172,7 @@
                 data.points.push(data.points[0]);
                 console.log(data);
 
-                fetch('/api/polygon', {
+                fetch('/api/polygons/polygon', {
                     method: 'PUT',
                     credentials: 'include',
                     headers: {

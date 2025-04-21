@@ -7,8 +7,8 @@ handle_path /api/webhook {
 	reverse_proxy webhook:8080
 }
 
-handle_path /api/* {
-	reverse_proxy backend:8080
+handle_path /api/polygons/* {
+	reverse_proxy polygons_api:8080
 }
 
 handle_path /polygons/* {

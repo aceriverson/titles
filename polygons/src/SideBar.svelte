@@ -2,7 +2,7 @@
     import { slide } from 'svelte/transition';
     import { showMapTools, mapLocation, user } from './stores.js';
 
-    const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=110809&response_type=code&redirect_uri=${process.env.HOST}/api/exchange_token&approval_prompt=auto&scope=activity:write,activity:read_all`;
+    const stravaAuthUrl = `https://www.strava.com/oauth/authorize?client_id=110809&response_type=code&redirect_uri=https://${process.env.HOST}/api/polygons/exchange_token&approval_prompt=auto&scope=activity:write,activity:read_all`;
 
     let sideBarOpen = false;
 
@@ -11,13 +11,13 @@
         showMapTools.set(!sideBarOpen)
     }
 
-    function handleLogout(event) {
+    async function handleLogout(event) {
 		event.preventDefault();
-		fetch('/api/logout', {
+		await fetch('/api/polygons/logout', {
             method: 'POST',
         });
         user.set(null);
-        toggleSideBar();
+        window.location.reload();
 	}
 
     let searchTerm = "";
