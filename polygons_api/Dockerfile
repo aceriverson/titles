@@ -4,17 +4,15 @@ FROM golang:1.23 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy the shared modules
-COPY ../shared /app/shared
+COPY shared/ ./shared
 
-# Copy go.mod and go.sum files
-COPY go.mod go.sum ./
+COPY polygons_api/go.mod polygons_api/go.sum ./
 
 # Download dependencies
 RUN go mod download
 
 # Copy the rest of the application code
-COPY . .
+COPY polygons_api/ .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server .

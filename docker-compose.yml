@@ -3,7 +3,7 @@ version: '3.8'
 services:
   polygons_api:
     build:
-      context: ./polygons_api
+      context: .
       dockerfile: Dockerfile
     depends_on:
       - postgres
