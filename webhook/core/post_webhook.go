@@ -78,12 +78,29 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 		return errors.New("failed to generate map")
 	}
 
-	poi, err := h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
-	if err != nil {
-		return errors.New("failed to get poi")
+	var poi models.POIs
+	if user.Plan == models.UserPlanFree {
+		poi, err = h.DB.GetPOI(polyline.Points)
+		if err != nil {
+			return errors.New("failed to get poi via cache")
+		}
+	} else if user.Plan == models.UserPlanPro {
+		poi, err = h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
+		if err != nil {
+			return errors.New("failed to get poi via HERE")
+		}
+
+		if err := h.DB.SetPOI(poi); err != nil {
+			return errors.New("failed to cache poi")
+		}
 	}
 
-	title, err := h.AI.Title(user.Plan, activity, polygons, routeMap, poi)
+	titles := make([]string, len(poi.Items))
+	for i, item := range poi.Items {
+		titles[i] = item.Title
+	}
+
+	title, err := h.AI.Title(user.Plan, activity, polygons, routeMap, titles)
 	if err != nil {
 		return errors.New("failed to get title")
 	}

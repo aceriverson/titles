@@ -11,8 +11,10 @@ type AIService interface {
 type DBService interface {
 	Close()
 	GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error)
+	GetPOI(points [][]float64) (models.POIs, error)
 	GetUserInternal(userID int64) (models.User, error)
 	NewUser(user models.User) error
+	SetPOI(poi models.POIs) error
 	UnauthorizeUser(userID int64) error
 	UpdateUser(user models.User) error
 }
@@ -26,7 +28,7 @@ type TTLStoreService interface {
 }
 
 type HereService interface {
-	GetPOI(line string, start []float64) ([]string, error)
+	GetPOI(line string, start []float64) (models.POIs, error)
 }
 
 type MapService interface {

@@ -83,6 +83,42 @@ func (d *DBServiceImpl) GetIntersectingPolygons(userID int64, points [][]float64
 	return polygons, nil
 }
 
+func (d *DBServiceImpl) GetPOI(points [][]float64) (models.POIs, error) {
+	polystr := "LINESTRING ("
+	for _, p := range points {
+		polystr += fmt.Sprintf("%f %f, ", p[1], p[0])
+	}
+	polystr = polystr[:len(polystr)-2] + ")"
+
+	rows, err := d.db.Query("SELECT title, lat, lng FROM poi WHERE active = true AND ST_DWithin(poi.geom, ST_SetSRID(ST_GeomFromText($1), 4326)::geography, 25);", polystr)
+	if err != nil {
+		log.Println("error querying polygons:", err)
+		return models.POIs{}, err
+	}
+
+	pois := []models.POI{}
+	for rows.Next() {
+		var name string
+		var lat, lon float64
+		if err := rows.Scan(&name, &lat, &lon); err != nil {
+			log.Println("error scanning row:", err)
+			return models.POIs{}, err
+		}
+
+		poi := models.POI{
+			Title: name,
+			Position: models.Coordinates{
+				Latitude:  lat,
+				Longitude: lon,
+			},
+		}
+
+		pois = append(pois, poi)
+	}
+
+	return models.POIs{Items: pois}, nil
+}
+
 func (d *DBServiceImpl) GetUserInternal(userID int64) (models.User, error) {
 	user := models.User{}
 
@@ -117,6 +153,21 @@ func (d *DBServiceImpl) NewUser(user models.User) error {
 	if err != nil {
 		log.Println("error inserting user:", err)
 		return err
+	}
+
+	return nil
+}
+
+func (d *DBServiceImpl) SetPOI(pois models.POIs) error {
+	for _, poi := range pois.Items {
+		_, err := d.db.Exec(
+			"INSERT INTO pois (id, title, lat, lng) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING;",
+			poi.ID, poi.Title, poi.Position.Latitude, poi.Position.Longitude,
+		)
+		if err != nil {
+			log.Println("error inserting POI:", err)
+			return err
+		}
 	}
 
 	return nil

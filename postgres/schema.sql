@@ -21,3 +21,16 @@ CREATE TABLE IF NOT EXISTS polygons (
     name VARCHAR,
     geom geometry(Polygon, 4326)
 );
+
+CREATE TABLE IF NOT EXISTS poi (
+    id VARCHAR PRIMARY KEY,
+    title VARCHAR,
+    lat DOUBLE PRECISION NOT NULL,
+    lng DOUBLE PRECISION NOT NULL,
+    geom GEOGRAPHY(POINT, 4326) GENERATED ALWAYS AS (
+        ST_SetSRID(ST_MakePoint(lng, lat), 4326)::GEOGRAPHY
+    ) STORED,
+    active BOOLEAN DEFAULT TRUE
+);
+
+CREATE INDEX idx_poi_geom ON poi USING GIST (geom);

@@ -95,7 +95,7 @@ func (d *TTLStoreServiceImpl) CheckRateLimit(id int64, plan models.UserPlan) (bo
 		return false, errors.New("failed to get key")
 	}
 
-	if dailyCount > dailyLimit {
+	if dailyCount >= dailyLimit {
 		return true, nil
 	}
 
@@ -105,7 +105,7 @@ func (d *TTLStoreServiceImpl) CheckRateLimit(id int64, plan models.UserPlan) (bo
 		return false, errors.New("failed to get key")
 	}
 
-	if monthlyCount > monthlyLimit {
+	if monthlyCount >= monthlyLimit {
 		return true, nil
 	}
 
