@@ -161,7 +161,7 @@ func (d *DBServiceImpl) NewUser(user models.User) error {
 func (d *DBServiceImpl) SetPOI(pois models.POIs) error {
 	for _, poi := range pois.Items {
 		_, err := d.db.Exec(
-			"INSERT INTO pois (id, title, lat, lng) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING;",
+			"INSERT INTO poi (id, title, lat, lng) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING;",
 			poi.ID, poi.Title, poi.Position.Latitude, poi.Position.Longitude,
 		)
 		if err != nil {
