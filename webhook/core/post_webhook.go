@@ -8,11 +8,11 @@ import (
 )
 
 func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
-	is_duplicate, err := h.Dedupe.DedupeActivity(webhook.ObjectID)
+	isDuplicate, err := h.TTLStore.DedupeActivity(webhook.ObjectID)
 	if err != nil {
 		return errors.New("failed to dedupe activity")
 	}
-	if is_duplicate {
+	if isDuplicate {
 		return nil
 	}
 
@@ -32,6 +32,18 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 
 	if user.Plan == models.UserPlanNone {
 		return nil
+	}
+
+	isRateLimited, err := h.TTLStore.CheckRateLimit(user.ID, user.Plan)
+	if err != nil {
+		return errors.New("failed to check rate limit")
+	}
+	if isRateLimited {
+		return nil
+	}
+
+	if err := h.TTLStore.IncrementRateLimit(user.ID); err != nil {
+		return errors.New("failed to increment rate limit")
 	}
 
 	activity, err := h.Strava.GetActivity(user, webhook.ObjectID)
@@ -82,7 +94,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 		return errors.New("failed to rename activity")
 	}
 
-	if err := h.Dedupe.AddActivity(webhook.ObjectID); err != nil {
+	if err := h.TTLStore.AddActivity(webhook.ObjectID); err != nil {
 		return errors.New("failed to add activity")
 	}
 

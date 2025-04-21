@@ -5,32 +5,32 @@ import (
 )
 
 type TitlesCore struct {
-	DB     interfaces.DBService
-	Dedupe interfaces.DedupeService
-	AI     interfaces.AIService
-	Strava interfaces.StravaService
-	Map    interfaces.MapService
-	Here   interfaces.HereService
-	Ntfy   interfaces.NtfyService
+	DB       interfaces.DBService
+	TTLStore interfaces.TTLStoreService
+	AI       interfaces.AIService
+	Strava   interfaces.StravaService
+	Map      interfaces.MapService
+	Here     interfaces.HereService
+	Ntfy     interfaces.NtfyService
 }
 
 func NewTitlesCore(
 	db interfaces.DBService,
-	dedupe interfaces.DedupeService,
+	ttlStore interfaces.TTLStoreService,
 	ai interfaces.AIService,
 	strava interfaces.StravaService,
-	map_service interfaces.MapService,
+	mapService interfaces.MapService,
 	here interfaces.HereService,
 	ntfy interfaces.NtfyService,
 ) *TitlesCore {
 	core := &TitlesCore{
-		DB:     db,
-		Dedupe: dedupe,
-		AI:     ai,
-		Strava: strava,
-		Map:    map_service,
-		Here:   here,
-		Ntfy:   ntfy,
+		DB:       db,
+		TTLStore: ttlStore,
+		AI:       ai,
+		Strava:   strava,
+		Map:      mapService,
+		Here:     here,
+		Ntfy:     ntfy,
 	}
 
 	return core

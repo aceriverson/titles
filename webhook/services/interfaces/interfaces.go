@@ -17,10 +17,12 @@ type DBService interface {
 	UpdateUser(user models.User) error
 }
 
-type DedupeService interface {
+type TTLStoreService interface {
 	Close()
 	AddActivity(id int64) error
 	DedupeActivity(id int64) (bool, error)
+	CheckRateLimit(userID int64, plan models.UserPlan) (bool, error)
+	IncrementRateLimit(userID int64) error
 }
 
 type HereService interface {
