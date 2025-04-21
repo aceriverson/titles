@@ -4,7 +4,8 @@ FROM golang:1.23 AS builder
 # Set the working directory
 WORKDIR /app
 
-COPY shared/ ./shared
+# Copy the shared directory to ../shared where replace directive expects it
+COPY shared/ ../shared
 
 COPY polygons_api/go.mod polygons_api/go.sum ./
 
