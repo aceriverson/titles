@@ -4,6 +4,9 @@ FROM golang:1.23 AS builder
 # Set the working directory
 WORKDIR /app
 
+# Copy the shared modules
+COPY ../shared /app/shared
+
 # Copy go.mod and go.sum files
 COPY go.mod go.sum ./
 
