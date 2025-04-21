@@ -30,6 +30,10 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 		return errors.New("failed to update user")
 	}
 
+	if user.Plan == models.UserPlanNone {
+		return nil
+	}
+
 	activity, err := h.Strava.GetActivity(user, webhook.ObjectID)
 	if err != nil {
 		return errors.New("failed to get activity")
@@ -51,40 +55,28 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 
 	update := models.Update{Description: activity.Description}
 
-	if !user.AI && len(polygons) > 0 {
-		update.Name = polygons[0].Name
-
-		if update.Description == "" {
-			update.Description = "Titled via titles․run"
-		} else {
-			update.Description += "\n\nTitled via titles․run"
-		}
-	} else if user.AI {
-		if update.Description == "" {
-			update.Description = "Titled via titles․run/ai"
-		} else {
-			update.Description += "\n\nTitled via titles․run/ai"
-		}
-
-		routeMap, err := h.Map.GenerateMap(polyline.Points)
-		if err != nil {
-			return errors.New("failed to generate map")
-		}
-
-		poi, err := h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
-		if err != nil {
-			return errors.New("failed to get poi")
-		}
-
-		title, err := h.AI.Title(activity, polygons, routeMap, poi)
-		if err != nil {
-			return errors.New("failed to get title")
-		}
-
-		update.Name = title
+	if update.Description == "" {
+		update.Description = "Titled via titles․run"
 	} else {
-		return nil
+		update.Description += "\n\nTitled via titles․run"
 	}
+
+	routeMap, err := h.Map.GenerateMap(polyline.Points)
+	if err != nil {
+		return errors.New("failed to generate map")
+	}
+
+	poi, err := h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
+	if err != nil {
+		return errors.New("failed to get poi")
+	}
+
+	title, err := h.AI.Title(user.Plan, activity, polygons, routeMap, poi)
+	if err != nil {
+		return errors.New("failed to get title")
+	}
+
+	update.Name = title
 
 	if err := h.Strava.RenameActivity(user, activity, update); err != nil {
 		return errors.New("failed to rename activity")

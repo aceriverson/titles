@@ -5,7 +5,7 @@ import (
 )
 
 type AIService interface {
-	Title(activity models.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error)
+	Title(plan models.UserPlan, activity models.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error)
 }
 
 type DBService interface {

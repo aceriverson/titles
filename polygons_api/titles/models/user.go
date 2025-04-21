@@ -1,9 +1,11 @@
 package models
 
 type User struct {
-	ID   int64  `json:"id"`
-	Pic  string `json:"pic"`
-	Name string `json:"name"`
+	ID            int64    `json:"id"`
+	Pic           string   `json:"pic"`
+	Name          string   `json:"name"`
+	Plan          UserPlan `json:"plan"`
+	TermsAccepted bool     `json:"terms_accepted"`
 }
 
 type UserPlan string
@@ -15,14 +17,14 @@ const (
 )
 
 type UserInternal struct {
-	ID           int64    `json:"id"`
-	Pic          string   `json:"pic"`
-	Name         string   `json:"name"`
-	AccessToken  string   `json:"access_token"`
-	RefreshToken string   `json:"refresh_token"`
-	ExpiresAt    int64    `json:"expires_at"`
-	AI           bool     `json:"ai"`
-	Plan         UserPlan `json:"plan"`
+	ID            int64    `json:"id"`
+	Pic           string   `json:"pic"`
+	Name          string   `json:"name"`
+	AccessToken   string   `json:"access_token"`
+	RefreshToken  string   `json:"refresh_token"`
+	ExpiresAt     int64    `json:"expires_at"`
+	Plan          UserPlan `json:"plan"`
+	TermsAccepted bool     `json:"terms_accepted"`
 }
 
 type TokenExchangeResponse struct {

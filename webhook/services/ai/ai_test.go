@@ -9,7 +9,8 @@ import (
 )
 
 func TestAIServiceImpl_Title(t *testing.T) {
-	os.Setenv("OPENAI_KEY", "dummy_key")
+	os.Setenv("AI_URL", "https://ai.example.com/v1/chat/completions")
+	os.Setenv("AI_API_KEY", "dummy_key")
 
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
@@ -25,7 +26,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	}`
 	httpmock.RegisterResponder(
 		"POST",
-		"https://api.openai.com/v1/chat/completions",
+		"https://ai.example.com/v1/chat/completions",
 		httpmock.NewStringResponder(200, mockResponse),
 	)
 
@@ -45,7 +46,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	routeMap := "data:image/png;base64,FAKE_BASE64_DATA"
 	poi := []string{"Central Park", "Harlem River"}
 
-	title, err := service.Title(activity, polygons, routeMap, poi)
+	title, err := service.Title(models.UserPlanFree, activity, polygons, routeMap, poi)
 	if err != nil {
 		t.Fatalf("Title method returned an error: %v", err)
 	}
@@ -56,7 +57,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	}
 
 	info := httpmock.GetCallCountInfo()
-	if count := info["POST https://api.openai.com/v1/chat/completions"]; count != 1 {
+	if count := info["POST https://ai.example.com/v1/chat/completions"]; count != 1 {
 		t.Errorf("Expected 1 call to the mocked endpoint, but got %d", count)
 	}
 }
