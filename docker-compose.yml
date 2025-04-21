@@ -4,7 +4,7 @@ services:
   polygons_api:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: polygons_api/Dockerfile
     depends_on:
       - postgres
     env_file:
