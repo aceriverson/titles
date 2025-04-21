@@ -4,6 +4,8 @@ import (
 	"os"
 	"testing"
 
+	strava "titles.run/strava/models"
+
 	"github.com/jarcoal/httpmock"
 	"titles.run/webhook/models"
 )
@@ -32,9 +34,9 @@ func TestAIServiceImpl_Title(t *testing.T) {
 
 	service := NewAIService()
 
-	activity := models.Activity{
+	activity := strava.Activity{
 		SportType: "run",
-		SegmentEfforts: []models.SegmentEffort{
+		SegmentEfforts: []strava.SegmentEffort{
 			{Name: "Central Park Loop"},
 			{Name: "Central Park East"},
 		},
@@ -46,7 +48,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	routeMap := "data:image/png;base64,FAKE_BASE64_DATA"
 	poi := []string{"Central Park", "Harlem River"}
 
-	title, err := service.Title(models.UserPlanFree, activity, polygons, routeMap, poi)
+	title, err := service.Title(strava.UserPlanFree, activity, polygons, routeMap, poi)
 	if err != nil {
 		t.Fatalf("Title method returned an error: %v", err)
 	}

@@ -11,6 +11,8 @@ import (
 	"titles.run/webhook/models"
 	"titles.run/webhook/services/interfaces"
 
+	strava "titles.run/strava/models"
+
 	_ "github.com/lib/pq"
 )
 
@@ -119,8 +121,8 @@ func (d *DBServiceImpl) GetPOI(points [][]float64) (models.POIs, error) {
 	return models.POIs{Items: pois}, nil
 }
 
-func (d *DBServiceImpl) GetUserInternal(userID int64) (models.User, error) {
-	user := models.User{}
+func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, error) {
+	user := strava.UserInternal{}
 
 	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.Plan, &user.TermsAccepted)
 	if err != nil {
@@ -135,7 +137,7 @@ func (d *DBServiceImpl) GetUserInternal(userID int64) (models.User, error) {
 	return user, nil
 }
 
-func (d *DBServiceImpl) NewUser(user models.User) error {
+func (d *DBServiceImpl) NewUser(user strava.UserInternal) error {
 	_, err := d.db.Exec(
 		`
 		INSERT INTO users (id, name, pic, access_token, refresh_token, expires_at)
@@ -183,7 +185,7 @@ func (d *DBServiceImpl) UnauthorizeUser(userID int64) error {
 	return nil
 }
 
-func (d *DBServiceImpl) UpdateUser(user models.User) error {
+func (d *DBServiceImpl) UpdateUser(user strava.UserInternal) error {
 	_, err := d.db.Exec(
 		"UPDATE users SET name = $1, pic = $2, access_token = $3, refresh_token = $4, expires_at = $5 WHERE id = $6;",
 		user.Name, user.Pic, user.AccessToken, user.RefreshToken, user.ExpiresAt, user.ID,

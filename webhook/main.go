@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
+	"titles.run/strava"
 	"titles.run/webhook/services/ai"
 	"titles.run/webhook/services/db"
 	"titles.run/webhook/services/here"
 	map_service "titles.run/webhook/services/map"
 	"titles.run/webhook/services/ntfy"
-	"titles.run/webhook/services/strava"
 	"titles.run/webhook/services/ttlstore"
 
 	titles "titles.run/webhook/core"
@@ -22,7 +23,7 @@ func main() {
 	dbService := db.NewDBService()
 	ttlStoreService := ttlstore.NewTTLStoreService()
 	aiService := ai.NewAIService()
-	stravaService := strava.NewStravaService()
+	stravaService := strava.NewStravaService(os.Getenv("STRAVA_CLIENT_ID"), os.Getenv("STRAVA_CLIENT_SECRET"))
 	mapService := map_service.NewMapService()
 	hereService := here.NewHereService()
 	ntfyService := ntfy.NewNtfyService()

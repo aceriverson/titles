@@ -3,9 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"titles.run/services/db"
-	"titles.run/services/strava"
+	"titles.run/strava"
 
 	"titles.run/titles"
 	"titles.run/titles/handlers"
@@ -15,7 +16,7 @@ func main() {
 	log.Println("Starting application...")
 
 	dbService := db.NewDBService()
-	stravaService := strava.NewStravaService()
+	stravaService := strava.NewStravaService(os.Getenv("STRAVA_CLIENT_ID"), os.Getenv("STRAVA_CLIENT_SECRET"))
 
 	defer dbService.Close()
 

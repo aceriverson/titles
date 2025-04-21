@@ -8,8 +8,9 @@ import (
 	"strconv"
 	"time"
 
-	"titles.run/webhook/models"
 	"titles.run/webhook/services/interfaces"
+
+	strava "titles.run/strava/models"
 
 	"github.com/redis/go-redis/v9"
 )
@@ -71,18 +72,18 @@ func (d *TTLStoreServiceImpl) DedupeActivity(id int64) (bool, error) {
 	return exists > 0, nil
 }
 
-func (d *TTLStoreServiceImpl) CheckRateLimit(id int64, plan models.UserPlan) (bool, error) {
-	if plan == models.UserPlanNone {
+func (d *TTLStoreServiceImpl) CheckRateLimit(id int64, plan strava.UserPlan) (bool, error) {
+	if plan == strava.UserPlanNone {
 		return false, nil
 	}
 
 	var dailyLimit int
 	var monthlyLimit int
 	switch plan {
-	case models.UserPlanFree:
+	case strava.UserPlanFree:
 		dailyLimit, _ = strconv.Atoi(os.Getenv("LIMIT_FREE_DAILY"))
 		monthlyLimit, _ = strconv.Atoi(os.Getenv("LIMIT_FREE_MONTHLY"))
-	case models.UserPlanPro:
+	case strava.UserPlanPro:
 		dailyLimit, _ = strconv.Atoi(os.Getenv("LIMIT_PRO_DAILY"))
 		monthlyLimit, _ = strconv.Atoi(os.Getenv("LIMIT_PRO_MONTHLY"))
 	default:

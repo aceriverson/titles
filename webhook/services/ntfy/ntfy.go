@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 
-	"titles.run/webhook/models"
+	"titles.run/strava/models"
 	"titles.run/webhook/services/interfaces"
 )
 
@@ -22,7 +22,7 @@ func NewNtfyService() interfaces.NtfyService {
 	}
 }
 
-func (n *NtfyServiceImpl) Notify(user models.User, activity models.Activity, update models.Update) error {
+func (n *NtfyServiceImpl) Notify(user models.UserInternal, activity models.Activity, update models.Update) error {
 	url := fmt.Sprintf("https://ntfy.sh/%s", n.NtfyChannel)
 
 	body := fmt.Sprintf("%s - %d - %s", user.Name, activity.ID, update.Name)

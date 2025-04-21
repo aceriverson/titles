@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"titles.run/webhook/models"
+	"titles.run/strava/models"
 )
 
 func (h *Handler) PostWebhookHandler() http.HandlerFunc {

@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"titles.run/services/interfaces"
+	strava "titles.run/strava/models"
 	"titles.run/titles/models"
 
 	_ "github.com/lib/pq"
@@ -93,8 +94,8 @@ func (d *DBServiceImpl) GetIntersectingPolygons(userID int64, points [][]float64
 	return polygons, nil
 }
 
-func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
-	user := models.User{}
+func (d *DBServiceImpl) GetUser(userID int64) (strava.User, error) {
+	user := strava.User{}
 
 	err := d.db.QueryRow("SELECT id, name, pic, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.Plan, &user.TermsAccepted)
 	if err != nil {
@@ -109,8 +110,8 @@ func (d *DBServiceImpl) GetUser(userID int64) (models.User, error) {
 	return user, nil
 }
 
-func (d *DBServiceImpl) GetUserInternal(userID int64) (models.UserInternal, error) {
-	user := models.UserInternal{}
+func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, error) {
+	user := strava.UserInternal{}
 
 	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.Plan, &user.TermsAccepted)
 	if err != nil {
@@ -162,7 +163,7 @@ func (d *DBServiceImpl) GetPolygons(userID int64) ([]models.Polygon, error) {
 	return polygons, nil
 }
 
-func (d *DBServiceImpl) NewUser(user models.UserInternal) error {
+func (d *DBServiceImpl) NewUser(user strava.UserInternal) error {
 	_, err := d.db.Exec(
 		`
 		INSERT INTO users (id, name, pic, access_token, refresh_token, expires_at)
@@ -215,7 +216,7 @@ func (d *DBServiceImpl) UnauthorizeUser(userID int64) error {
 	return nil
 }
 
-func (d *DBServiceImpl) UpdateUser(user models.UserInternal) error {
+func (d *DBServiceImpl) UpdateUser(user strava.UserInternal) error {
 	_, err := d.db.Exec(
 		"UPDATE users SET name = $1, pic = $2, access_token = $3, refresh_token = $4, expires_at = $5 WHERE id = $6;",
 		user.Name, user.Pic, user.AccessToken, user.RefreshToken, user.ExpiresAt, user.ID,

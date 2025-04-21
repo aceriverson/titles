@@ -2,11 +2,14 @@ module titles.run/webhook
 
 go 1.23.1
 
+replace titles.run/strava => ../shared/strava
+
 require (
 	github.com/golang/geo v0.0.0-20250417192230-a483f6ae7110
 	github.com/jarcoal/httpmock v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.7.3
+	titles.run/strava v0.0.0-00010101000000-000000000000
 )
 
 require (

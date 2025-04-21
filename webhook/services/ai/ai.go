@@ -15,6 +15,8 @@ import (
 
 	"titles.run/webhook/models"
 	"titles.run/webhook/services/interfaces"
+
+	strava "titles.run/strava/models"
 )
 
 //go:embed templates/system_prompt.tmpl
@@ -43,7 +45,7 @@ func NewAIService() interfaces.AIService {
 	}
 }
 
-func (a *AIServiceImpl) Title(plan models.UserPlan, activity models.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
+func (a *AIServiceImpl) Title(plan strava.UserPlan, activity strava.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
 	requestBody, err := constructRequestBody(plan, polygons, activity, routeMap, poi)
 	if err != nil {
 		log.Printf("Error constructing request body: %v", err)
@@ -102,7 +104,7 @@ func renderTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func constructRequestBody(plan models.UserPlan, polygons []models.Polygon, activity models.Activity, routeMap string, poi []string) (map[string]interface{}, error) {
+func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activity strava.Activity, routeMap string, poi []string) (map[string]interface{}, error) {
 	polygonNames := make([]string, len(polygons))
 	for i, polygon := range polygons {
 		polygonNames[i] = polygon.Name
@@ -142,22 +144,22 @@ func constructRequestBody(plan models.UserPlan, polygons []models.Polygon, activ
 	// "google/gemini-flash-1.5-8b-exp",
 
 	var model string
-	if plan == models.UserPlanFree {
+	if plan == strava.UserPlanFree {
 		model = "google/gemini-2.0-flash-exp:free"
-	} else if plan == models.UserPlanPro {
+	} else if plan == strava.UserPlanPro {
 		model = "google/gemini-2.0-flash-exp:free"
 	} else {
 		model = "google/gemini-2.0-flash-exp:free"
 	}
 
 	var extraModels []string
-	if plan == models.UserPlanFree {
+	if plan == strava.UserPlanFree {
 		extraModels = []string{
 			"google/gemma-3-27b-it:free",
 			"meta-llama/llama-4-maverick:free",
 			"google/gemma-3-4b-it",
 		}
-	} else if plan == models.UserPlanPro {
+	} else if plan == strava.UserPlanPro {
 		extraModels = []string{
 			"google/gemini-2.0-flash-001",
 			"google/gemma-3-27b-it:free",

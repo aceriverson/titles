@@ -2,16 +2,17 @@ package titles
 
 import (
 	"titles.run/services/interfaces"
+	"titles.run/strava"
 )
 
 type TitlesCore struct {
 	DB     interfaces.DBService
-	Strava interfaces.StravaService
+	Strava strava.Client
 }
 
 func NewTitlesCore(
 	db interfaces.DBService,
-	strava interfaces.StravaService,
+	strava strava.Client,
 ) *TitlesCore {
 	core := &TitlesCore{
 		DB:     db,

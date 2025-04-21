@@ -4,14 +4,16 @@ FROM golang:1.23 AS builder
 # Set the working directory
 WORKDIR /app
 
-# Copy go.mod and go.sum files
-COPY go.mod go.sum ./
+# Copy the shared directory to ../shared where replace directive expects it
+COPY shared/ ../shared
+
+COPY webhook/go.mod webhook/go.sum ./
 
 # Download dependencies
 RUN go mod download
 
 # Copy the rest of the application code
-COPY . .
+COPY webhook/ .
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o server .

@@ -3,11 +3,12 @@ package titles
 import (
 	"errors"
 
+	strava "titles.run/strava/models"
 	"titles.run/webhook/models"
 	"titles.run/webhook/utils"
 )
 
-func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
+func (h *TitlesCore) PostWebhook(webhook strava.Webhook) error {
 	isDuplicate, err := h.TTLStore.DedupeActivity(webhook.ObjectID)
 	if err != nil {
 		return errors.New("failed to dedupe activity")
@@ -30,7 +31,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 		return errors.New("failed to update user")
 	}
 
-	if user.Plan == models.UserPlanNone {
+	if user.Plan == strava.UserPlanNone {
 		return nil
 	}
 
@@ -65,7 +66,7 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 		return errors.New("failed to get intersecting polygons")
 	}
 
-	update := models.Update{Description: activity.Description}
+	update := strava.Update{Description: activity.Description}
 
 	if update.Description == "" {
 		update.Description = "Titled via titles․run"
@@ -79,12 +80,12 @@ func (h *TitlesCore) PostWebhook(webhook models.Webhook) error {
 	}
 
 	var poi models.POIs
-	if user.Plan == models.UserPlanFree {
+	if user.Plan == strava.UserPlanFree {
 		poi, err = h.DB.GetPOI(polyline.Points)
 		if err != nil {
 			return errors.New("failed to get poi via cache")
 		}
-	} else if user.Plan == models.UserPlanPro {
+	} else if user.Plan == strava.UserPlanPro {
 		poi, err = h.Here.GetPOI(polyline.Flex, polyline.Points[len(polyline.Points)/2])
 		if err != nil {
 			return errors.New("failed to get poi via HERE")
