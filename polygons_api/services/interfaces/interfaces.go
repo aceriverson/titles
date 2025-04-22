@@ -9,9 +9,7 @@ type DBService interface {
 	Close()
 	DeletePolygon(userID int64, polygon models.Polygon) error
 	GetUser(userID int64) (strava.User, error)
-	GetUserInternal(userID int64) (strava.UserInternal, error)
 	GetPolygons(userID int64) ([]models.Polygon, error)
-	NewUser(user strava.UserInternal) error
 	PostPolygon(userID int64, polygon models.Polygon) error
 	PutPolygon(userID int64, polygon models.Polygon) error
 }

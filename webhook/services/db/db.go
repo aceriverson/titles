@@ -137,29 +137,6 @@ func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, erro
 	return user, nil
 }
 
-func (d *DBServiceImpl) NewUser(user strava.UserInternal) error {
-	_, err := d.db.Exec(
-		`
-		INSERT INTO users (id, name, pic, access_token, refresh_token, expires_at)
-		VALUES ($1, $2, $3, $4, $5, $6)
-		ON CONFLICT (id) 
-			DO UPDATE 
-			SET name = EXCLUDED.name,
-			pic = EXCLUDED.pic,
-			access_token = EXCLUDED.access_token,
-			refresh_token = EXCLUDED.refresh_token,
-			expires_at = EXCLUDED.expires_at;
-		`,
-		user.ID, user.Name, user.Pic, user.AccessToken, user.RefreshToken, user.ExpiresAt,
-	)
-	if err != nil {
-		log.Println("error inserting user:", err)
-		return err
-	}
-
-	return nil
-}
-
 func (d *DBServiceImpl) SetPOI(pois models.POIs) error {
 	for _, poi := range pois.Items {
 		_, err := d.db.Exec(

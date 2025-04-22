@@ -14,7 +14,6 @@ type DBService interface {
 	GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error)
 	GetPOI(points [][]float64) (models.POIs, error)
 	GetUserInternal(userID int64) (strava.UserInternal, error)
-	NewUser(user strava.UserInternal) error
 	SetPOI(poi models.POIs) error
 	UnauthorizeUser(userID int64) error
 	UpdateUser(user strava.UserInternal) error
