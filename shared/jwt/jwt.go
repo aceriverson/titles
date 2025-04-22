@@ -1,16 +1,16 @@
-package auth
+package jwt
 
 import (
 	"errors"
 	"os"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
+	jwtLib "github.com/golang-jwt/jwt/v5"
 )
 
 type CustomClaims struct {
 	UserID int64 `json:"user_id"`
-	jwt.RegisteredClaims
+	jwtLib.RegisteredClaims
 }
 
 func CreateJWT(userID int64) (string, error) {
@@ -18,13 +18,13 @@ func CreateJWT(userID int64) (string, error) {
 
 	claims := &CustomClaims{
 		UserID: userID,
-		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(expirationTime),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
+		RegisteredClaims: jwtLib.RegisteredClaims{
+			ExpiresAt: jwtLib.NewNumericDate(expirationTime),
+			IssuedAt:  jwtLib.NewNumericDate(time.Now()),
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwtLib.NewWithClaims(jwtLib.SigningMethodHS256, claims)
 	jwtSecret := os.Getenv("JWT_SECRET_KEY")
 	return token.SignedString([]byte(jwtSecret))
 }
@@ -35,7 +35,7 @@ func ValidateJWT(token string) (int64, error) {
 		return 0, errors.New("JWT_SECRET_KEY not found in environment")
 	}
 
-	parsed, err := jwt.ParseWithClaims(token, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+	parsed, err := jwtLib.ParseWithClaims(token, &CustomClaims{}, func(token *jwtLib.Token) (interface{}, error) {
 		return []byte(secretKey), nil
 	})
 

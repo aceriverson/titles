@@ -1,6 +1,15 @@
 version: '3.8'
 
 services:
+  auth:
+    build:
+      context: .
+      dockerfile: auth/Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
   polygons_api:
     build:
       context: .
@@ -63,6 +72,7 @@ services:
       - frontend_build:/srv/frontend
       - polygons_build:/srv/polygons
     depends_on:
+      - auth
       - polygons_api
       - webhook
       - frontend

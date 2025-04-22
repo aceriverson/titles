@@ -1,4 +1,4 @@
-module titles.run
+module titles.run/auth
 
 go 1.23.1
 

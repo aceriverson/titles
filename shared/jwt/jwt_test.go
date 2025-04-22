@@ -1,11 +1,11 @@
-package auth
+package jwt
 
 import (
 	"os"
 	"testing"
 )
 
-func TestAuthServiceImpl_CreateJWT(t *testing.T) {
+func TestJWTServiceImpl_CreateJWT(t *testing.T) {
 	os.Setenv("JWT_SECRET_KEY", "foo")
 
 	jwt, err := CreateJWT(1234)
@@ -19,7 +19,7 @@ func TestAuthServiceImpl_CreateJWT(t *testing.T) {
 	}
 }
 
-func TestAuthServiceImpl_ValidateJWT(t *testing.T) {
+func TestJWTServiceImpl_ValidateJWT(t *testing.T) {
 	os.Setenv("JWT_SECRET_KEY", "foo")
 
 	mockToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0MzIxfQ.glFdbMEN4gITHdrRO9MUTn2dIhp04CimMU97w1EQ8Dw"

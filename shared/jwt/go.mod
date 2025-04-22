@@ -1,4 +1,4 @@
-module titles.run/auth
+module titles.run/jwt
 
 go 1.23.1
 

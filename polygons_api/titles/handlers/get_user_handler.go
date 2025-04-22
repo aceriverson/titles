@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"titles.run/auth"
+	auth "titles.run/jwt"
 )
 
 func (h *Handler) GetUserHandler() http.HandlerFunc {

@@ -11,6 +11,10 @@ handle_path /api/polygons/* {
 	reverse_proxy polygons_api:8080
 }
 
+handle_path /auth/* {
+	reverse_proxy auth:8080
+}
+
 handle_path /polygons/* {
 	root * /srv/polygons
 	file_server

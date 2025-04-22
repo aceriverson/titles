@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"titles.run/auth"
+	auth "titles.run/jwt"
 	"titles.run/titles/models"
 )
 

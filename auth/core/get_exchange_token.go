@@ -1,11 +1,11 @@
-package titles
+package auth
 
 import (
-	"titles.run/auth"
-	"titles.run/services/errors"
+	"titles.run/auth/errors"
+	"titles.run/jwt"
 )
 
-func (h *TitlesCore) GetExchangeToken(code, scope string) (string, error) {
+func (h *Core) GetExchangeToken(code, scope string) (string, error) {
 	if scope != "read,activity:write,activity:read_all" {
 		return "", errors.ErrInvalidScope
 	}
@@ -19,5 +19,5 @@ func (h *TitlesCore) GetExchangeToken(code, scope string) (string, error) {
 		return "", err
 	}
 
-	return auth.CreateJWT(user.ID)
+	return jwt.CreateJWT(user.ID)
 }

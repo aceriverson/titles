@@ -7,15 +7,15 @@ import (
 	"net/http"
 	"os"
 
-	titlesErrors "titles.run/services/errors"
+	titlesErrors "titles.run/auth/errors"
 )
 
-func (h *Handler) GetExchangeTokenHandler() http.HandlerFunc {
+func (h *Handler) GetCallbackHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		code := r.URL.Query().Get("code")
 		scope := r.URL.Query().Get("scope")
 
-		jwt, err := h.titles.GetExchangeToken(code, scope)
+		jwt, err := h.auth.GetExchangeToken(code, scope)
 		if errors.Is(err, titlesErrors.ErrInvalidScope) {
 			http.Error(w, "Invalid scope", http.StatusBadRequest)
 			return
