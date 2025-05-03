@@ -15,4 +15,7 @@ func RegisterHandlers(titles *titles.TitlesCore) {
 
 	http.Handle("GET /", handler.GetWebhookHandler())
 	http.Handle("POST /", handler.PostWebhookHandler())
+
+	http.Handle("POST /demo", handler.PostDemoHandler())
+	http.Handle("POST /title", handler.PostTitleHandler())
 }

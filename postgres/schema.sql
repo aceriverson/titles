@@ -3,16 +3,16 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 CREATE TYPE plan AS ENUM ('none', 'free', 'pro');
 
 CREATE TABLE IF NOT EXISTS users (
-    id BIGINT PRIMARY KEY,
-    name VARCHAR,
-    pic VARCHAR,
-    access_token VARCHAR,
-	refresh_token VARCHAR,
-	expires_at BIGINT,
-    ai BOOLEAN DEFAULT FALSE,
-    plan plan DEFAULT 'none',
-    terms_accepted BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW()
+    id BIGINT PRIMARY KEY,                 -- Strava ID
+    name VARCHAR,                          -- Concatenated Strava name
+    pic VARCHAR,                           -- URL to Strava profile picture
+    access_token VARCHAR,                  -- Strava OAuth access token
+	refresh_token VARCHAR,                 -- Strava OAuth refresh token
+	expires_at BIGINT,                     -- Strava OAuth token expiration time
+    ai BOOLEAN DEFAULT FALSE,              -- Where user has enabled AI, should be set to true when terms are accepted
+    plan plan DEFAULT 'none',              -- User plan, should be set to 'free' when terms are accepted
+    terms_accepted BOOLEAN DEFAULT FALSE,  -- Whether user has accepted terms
+    created_at TIMESTAMP DEFAULT NOW()     -- User creation time
 );
 
 CREATE TABLE IF NOT EXISTS polygons (

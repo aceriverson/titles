@@ -2,19 +2,26 @@ module titles.run/webhook
 
 go 1.23.1
 
+replace titles.run/jwt => ../shared/jwt
+
 replace titles.run/strava => ../shared/strava
+
+replace titles.run/turnstile => ../shared/turnstile
 
 require (
 	github.com/golang/geo v0.0.0-20250417192230-a483f6ae7110
 	github.com/jarcoal/httpmock v1.4.0
 	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.7.3
+	titles.run/jwt v0.0.0-00010101000000-000000000000
 	titles.run/strava v0.0.0-00010101000000-000000000000
+	titles.run/turnstile v0.0.0-00010101000000-000000000000
 )
 
 require (
 	github.com/flopp/go-coordsparser v0.0.0-20250311184423-61a7ff62d17c // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/mazznoer/csscolorparser v0.1.5 // indirect
 	github.com/tkrajina/gpxgo v1.4.0 // indirect

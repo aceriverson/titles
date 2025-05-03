@@ -19,6 +19,15 @@ services:
     env_file:
       - .env
 
+  site_api:
+    build:
+      context: .
+      dockerfile: site_api/Dockerfile
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+
   webhook:
     build:
       context: .
@@ -35,6 +44,8 @@ services:
     volumes:
       - frontend_build:/app/dist
     command: sh -c "npm install && npm run build"
+    env_file:
+      - .env
 
   polygons:
     build:

@@ -124,7 +124,7 @@ func (d *DBServiceImpl) GetPOI(points [][]float64) (models.POIs, error) {
 func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, error) {
 	user := strava.UserInternal{}
 
-	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.Plan, &user.TermsAccepted)
+	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI, &user.Plan, &user.TermsAccepted)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("no user found for given ID:", userID)

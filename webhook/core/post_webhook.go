@@ -31,7 +31,7 @@ func (h *TitlesCore) PostWebhook(webhook strava.Webhook) error {
 		return errors.New("failed to update user")
 	}
 
-	if user.Plan == strava.UserPlanNone {
+	if user.Plan == strava.UserPlanNone || !user.AI {
 		return nil
 	}
 

@@ -171,10 +171,8 @@ func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activ
 	}
 
 	requestBody := map[string]interface{}{
-		"model": model,
-		"extra_body": map[string]interface{}{
-			"models": extraModels,
-		},
+		"model":  model,
+		"models": extraModels,
 		"messages": []map[string]interface{}{
 			{"role": "system", "content": systemContent},
 			{

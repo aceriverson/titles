@@ -3,12 +3,16 @@ http://:80
 @noTrailingSlash path /polygons
 redir @noTrailingSlash /polygons/
 
-handle_path /api/webhook {
+handle_path /api/webhook/* {
 	reverse_proxy webhook:8080
 }
 
 handle_path /api/polygons/* {
 	reverse_proxy polygons_api:8080
+}
+
+handle_path /api/* {
+	reverse_proxy site_api:8080
 }
 
 handle_path /auth/* {
@@ -22,5 +26,6 @@ handle_path /polygons/* {
 
 handle {
 	root * /srv/frontend
+	try_files {path} /index.html
 	file_server
 }
