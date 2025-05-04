@@ -143,6 +143,7 @@ func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activ
 	}
 
 	// The following models are available options for future use if neccessary.
+	// OpenRouter only allows 3 models for free users.
 	// "meta-llama/llama-4-scout:free",
 	// "qwen/qwen2.5-vl-3b-instruct:free",
 	// "qwen/qwen2.5-vl-32b-instruct:free",
@@ -173,7 +174,6 @@ func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activ
 		extraModels = []string{
 			"google/gemini-2.0-flash-001",
 			"google/gemma-3-27b-it:free",
-			"meta-llama/llama-4-maverick:free",
 			"google/gemma-3-4b-it",
 		}
 	} else {
