@@ -88,6 +88,11 @@ func (a *AIServiceImpl) Title(plan strava.UserPlan, activity strava.Activity, po
 		return "", errors.New("failed to parse response JSON")
 	}
 
+	if len(response.Choices) == 0 {
+		log.Println("No choices in response")
+		return "", errors.New("no choices in response")
+	}
+
 	return response.Choices[0].Message.Content, nil
 }
 
