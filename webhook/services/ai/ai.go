@@ -81,6 +81,11 @@ func (a *AIServiceImpl) Title(plan strava.UserPlan, activity strava.Activity, po
 		return "", errors.New("failed to read response body")
 	}
 
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("Request failed with status %d: %s", resp.StatusCode, respBody)
+		return "", fmt.Errorf("request failed with status %d: %s", resp.StatusCode, respBody)
+	}
+
 	var response CompletionResponse
 	err = json.Unmarshal(respBody, &response)
 	if err != nil {
