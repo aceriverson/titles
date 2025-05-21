@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func (h *TitlesCore) CheckoutCompleted(userIDString, customer, session, customerEmail string) error {
+func (h *TitlesCore) CheckoutCompleted(userIDString, customer, session string) error {
 	if userIDString == "" {
 		return errors.New("userID is empty")
 	}
@@ -25,7 +25,7 @@ func (h *TitlesCore) CheckoutCompleted(userIDString, customer, session, customer
 	}
 
 	// Create new subscription
-	h.DB.CreateSubscription(userID, customer, session, customerEmail)
+	h.DB.CreateSubscription(userID, customer, session)
 
 	return nil
 }

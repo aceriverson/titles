@@ -38,8 +38,7 @@ CREATE INDEX idx_poi_geom ON poi USING GIST (geom);
 CREATE TABLE IF NOT EXISTS subscriptions (
     user_id BIGINT PRIMARY KEY REFERENCES users(id),
     customer VARCHAR,         -- Stripe customer ID
-    subscription VARCHAR,     -- Stripe subscription ID
-    email VARCHAR             -- Stripe email
+    subscription VARCHAR     -- Stripe subscription ID
 );
 
 CREATE TABLE IF NOT EXISTS user_settings (

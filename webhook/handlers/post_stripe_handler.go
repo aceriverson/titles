@@ -45,7 +45,8 @@ func (h *Handler) PostStripeHandler() http.HandlerFunc {
 		case "checkout.session.completed":
 			var session stripe.CheckoutSession
 			if err := json.Unmarshal(event.Data.Raw, &session); err == nil {
-				h.titles.CheckoutCompleted(session.ClientReferenceID, session.Customer.ID, session.Subscription.ID, session.CustomerEmail)
+				h.titles.CheckoutCompleted(session.ClientReferenceID, session.Customer.ID, session.Subscription.ID)
+				h.titles.SubscriptionCreated(session.Customer.ID, session.Subscription.ID)
 			}
 
 		case "customer.subscription.created":

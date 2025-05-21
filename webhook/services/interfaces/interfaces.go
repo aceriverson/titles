@@ -11,7 +11,7 @@ type AIService interface {
 
 type DBService interface {
 	Close()
-	CreateSubscription(userID int64, customer, session, customerEmail string) error
+	CreateSubscription(userID int64, customer, session string) error
 	GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error)
 	GetPOI(points [][]float64) (models.POIs, error)
 	GetUserInternal(userID int64) (strava.UserInternal, error)

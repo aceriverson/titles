@@ -55,10 +55,10 @@ func (d *DBServiceImpl) Close() {
 	d.db.Close()
 }
 
-func (d *DBServiceImpl) CreateSubscription(userID int64, customer, subscription, customerEmail string) error {
+func (d *DBServiceImpl) CreateSubscription(userID int64, customer, subscription string) error {
 	_, err := d.db.Exec(
-		"INSERT INTO subscriptions (user_id, customer, subscription, email) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id) DO UPDATE SET customer = $2, subscription = $3, email = $4;",
-		userID, customer, subscription, customerEmail,
+		"INSERT INTO subscriptions (user_id, customer, subscription) VALUES ($1, $2, $3) ON CONFLICT (user_id) DO UPDATE SET customer = $2, subscription = $3;",
+		userID, customer, subscription,
 	)
 	if err != nil {
 		log.Println("error inserting subscription:", err)
