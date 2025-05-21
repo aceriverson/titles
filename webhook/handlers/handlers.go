@@ -18,4 +18,7 @@ func RegisterHandlers(titles *titles.TitlesCore) {
 
 	http.Handle("POST /demo", handler.PostDemoHandler())
 	http.Handle("POST /title", handler.PostTitleHandler())
+
+	http.Handle("POST /stripe", handler.PostStripeHandler())
+	http.Handle("POST /stripe/", handler.PostStripeHandler())
 }

@@ -3,7 +3,7 @@ import { useUser } from "../contexts/UserContext";
 import { useLocation, useNavigate } from "@solidjs/router";
 import { JSX, createEffect } from "solid-js";
 
-const PROTECTED_ROUTES = ["/contact"];
+const PROTECTED_ROUTES = ["/contact", "/profile"];
 
 export default function RouteGuard(props: { children: JSX.Element }) {
   const { user, loading } = useUser();

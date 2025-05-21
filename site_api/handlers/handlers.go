@@ -17,4 +17,5 @@ func RegisterHandlers(core *site.Core) {
 
 	http.Handle("POST /accept_terms", handler.PostAcceptTermsHandler())
 	http.Handle("POST /contact", handler.PostContactHandler())
+	http.Handle("POST /settings", handler.PostSettingsHandler())
 }

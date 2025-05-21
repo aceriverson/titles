@@ -34,3 +34,15 @@ CREATE TABLE IF NOT EXISTS poi (
 );
 
 CREATE INDEX idx_poi_geom ON poi USING GIST (geom);
+
+CREATE TABLE IF NOT EXISTS subscriptions (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id),
+    customer VARCHAR,         -- Stripe customer ID
+    subscription VARCHAR,     -- Stripe subscription ID
+    email VARCHAR             -- Stripe email
+);
+
+CREATE TABLE IF NOT EXISTS user_settings (
+    user_id BIGINT PRIMARY KEY REFERENCES users(id),
+    settings JSONB DEFAULT '{}'::JSONB
+);

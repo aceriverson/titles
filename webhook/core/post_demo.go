@@ -30,7 +30,7 @@ func (h *TitlesCore) PostDemo(gpx models.Gpx) (string, error) {
 		titles[i] = item.Title
 	}
 
-	title, err := h.AI.Title(strava.UserPlanFree, strava.Activity{SportType: "Run"}, nil, routeMap, titles)
+	title, err := h.AI.Title(strava.UserPlanFree, 50, strava.Activity{SportType: "Run"}, nil, routeMap, titles)
 	if err != nil {
 		return "", errors.New("failed to get title")
 	}

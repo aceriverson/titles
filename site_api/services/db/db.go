@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -58,13 +59,45 @@ func (d *DBServiceImpl) AcceptTerms(userID int64) error {
 		log.Println("error updating terms accepted:", err)
 		return errors.New("could not update terms accepted")
 	}
+
+	defaultSettings := strava.Settings{
+		AutomaticTitle: true,
+		Tone:           50,
+		Attribution:    true,
+		Description:    false,
+	}
+	data, err := json.Marshal(defaultSettings)
+	if err != nil {
+		return err
+	}
+
+	_, err = d.db.Exec("UPDATE user_settings SET settings = $1 WHERE user_id = $2;", data, userID)
+	if err != nil {
+		log.Println("error updating user settings:", err)
+		return errors.New("could not update user settings")
+	}
+
 	return nil
 }
 
 func (d *DBServiceImpl) GetUser(userID int64) (strava.User, error) {
 	user := strava.User{}
+	var settingsJSON []byte
 
-	err := d.db.QueryRow("SELECT id, name, pic, ai, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AI, &user.Plan, &user.TermsAccepted)
+	err := d.db.QueryRow(`
+		SELECT u.id, u.name, u.pic, u.ai, u.plan, u.terms_accepted, COALESCE(s.settings, '{}'::jsonb)
+		FROM users u
+		LEFT JOIN user_settings s ON u.id = s.user_id
+		WHERE u.id = $1;
+	`, userID).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Pic,
+		&user.AI,
+		&user.Plan,
+		&user.TermsAccepted,
+		&settingsJSON,
+	)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("no user found for given ID:", userID)
@@ -72,23 +105,27 @@ func (d *DBServiceImpl) GetUser(userID int64) (strava.User, error) {
 		}
 		log.Println("error querying database:", err)
 		return user, errors.New("could not query database for GetUser")
+	}
+
+	if err := json.Unmarshal(settingsJSON, &user.Settings); err != nil {
+		log.Println("failed to unmarshal settings JSON:", err)
+		return user, errors.New("invalid user settings data")
 	}
 
 	return user, nil
 }
 
-func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, error) {
-	user := strava.UserInternal{}
-
-	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI, &user.Plan, &user.TermsAccepted)
+func (d *DBServiceImpl) UpdateSettings(userID int64, settings strava.Settings) error {
+	data, err := json.Marshal(settings)
 	if err != nil {
-		if err == sql.ErrNoRows {
-			log.Println("no user found for given ID:", userID)
-			return user, errors.New("no user found for GetUser")
-		}
-		log.Println("error querying database:", err)
-		return user, errors.New("could not query database for GetUser")
+		return err
 	}
 
-	return user, nil
+	_, err = d.db.Exec(`
+		INSERT INTO user_settings (user_id, settings)
+		VALUES ($1, $2)
+		ON CONFLICT (user_id) DO UPDATE SET settings = EXCLUDED.settings
+	`, userID, data)
+
+	return err
 }

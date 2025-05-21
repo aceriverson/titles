@@ -35,5 +35,6 @@ require (
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/flopp/go-staticmaps v0.0.0-20250419123608-f8593a4338f2
 	github.com/heremaps/flexible-polyline v0.1.0
+	github.com/stripe/stripe-go/v82 v82.1.0
 	github.com/twpayne/go-polyline v1.1.1
 )

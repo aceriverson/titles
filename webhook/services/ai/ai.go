@@ -45,8 +45,8 @@ func NewAIService() interfaces.AIService {
 	}
 }
 
-func (a *AIServiceImpl) Title(plan strava.UserPlan, activity strava.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
-	requestBody, err := constructRequestBody(plan, polygons, activity, routeMap, poi)
+func (a *AIServiceImpl) Title(plan strava.UserPlan, tone int, activity strava.Activity, polygons []models.Polygon, routeMap string, poi []string) (string, error) {
+	requestBody, err := constructRequestBody(plan, tone, polygons, activity, routeMap, poi)
 	if err != nil {
 		log.Printf("Error constructing request body: %v", err)
 		return "", err
@@ -114,7 +114,7 @@ func renderTemplate(tmplStr string, data interface{}) (string, error) {
 	return buf.String(), nil
 }
 
-func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activity strava.Activity, routeMap string, poi []string) (map[string]interface{}, error) {
+func constructRequestBody(plan strava.UserPlan, tone int, polygons []models.Polygon, activity strava.Activity, routeMap string, poi []string) (map[string]interface{}, error) {
 	polygonNames := make([]string, len(polygons))
 	for i, polygon := range polygons {
 		polygonNames[i] = polygon.Name
@@ -136,6 +136,7 @@ func constructRequestBody(plan strava.UserPlan, polygons []models.Polygon, activ
 		"SegmentNames": strings.Join(segmentEfforts, ", "),
 		"POIs":         strings.Join(poi, ", "),
 		"UserTitles":   strings.Join(polygonNames, ", "),
+		"Tone":         tone,
 	})
 	if err != nil {
 		log.Printf("Error rendering user template: %v", err)

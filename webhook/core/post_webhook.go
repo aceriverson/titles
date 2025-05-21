@@ -31,7 +31,7 @@ func (h *TitlesCore) PostWebhook(webhook strava.Webhook) error {
 		return errors.New("failed to update user")
 	}
 
-	if user.Plan == strava.UserPlanNone || !user.AI {
+	if user.Plan == strava.UserPlanNone || !user.AI || !user.Settings.AutomaticTitle {
 		return nil
 	}
 
@@ -68,10 +68,12 @@ func (h *TitlesCore) PostWebhook(webhook strava.Webhook) error {
 
 	update := strava.Update{Description: activity.Description}
 
-	if update.Description == "" {
-		update.Description = "Titled via titles․run"
-	} else {
-		update.Description += "\n\nTitled via titles․run"
+	if user.Settings.Attribution {
+		if update.Description == "" {
+			update.Description = "Titled via titles․run"
+		} else {
+			update.Description += "\n\nTitled via titles․run"
+		}
 	}
 
 	routeMap, err := h.Map.GenerateMap(polyline.Points)
@@ -101,7 +103,7 @@ func (h *TitlesCore) PostWebhook(webhook strava.Webhook) error {
 		titles[i] = item.Title
 	}
 
-	title, err := h.AI.Title(user.Plan, activity, polygons, routeMap, titles)
+	title, err := h.AI.Title(user.Plan, user.Settings.Tone, activity, polygons, routeMap, titles)
 	if err != nil {
 		return errors.New("failed to get title")
 	}

@@ -7,6 +7,7 @@ type User struct {
 	AI            bool     `json:"ai"`
 	Plan          UserPlan `json:"plan"`
 	TermsAccepted bool     `json:"terms_accepted"`
+	Settings      Settings `json:"settings"`
 }
 
 type UserPlan string
@@ -27,6 +28,7 @@ type UserInternal struct {
 	AI            bool     `json:"ai"`
 	Plan          UserPlan `json:"plan"`
 	TermsAccepted bool     `json:"terms_accepted"`
+	Settings      Settings `json:"settings"`
 }
 
 type TokenExchangeResponse struct {

@@ -48,7 +48,7 @@ func TestAIServiceImpl_Title(t *testing.T) {
 	routeMap := "data:image/png;base64,FAKE_BASE64_DATA"
 	poi := []string{"Central Park", "Harlem River"}
 
-	title, err := service.Title(strava.UserPlanFree, activity, polygons, routeMap, poi)
+	title, err := service.Title(strava.UserPlanFree, 50, activity, polygons, routeMap, poi)
 	if err != nil {
 		t.Fatalf("Title method returned an error: %v", err)
 	}

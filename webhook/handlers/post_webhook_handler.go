@@ -19,7 +19,7 @@ func (h *Handler) PostWebhookHandler() http.HandlerFunc {
 		}
 
 		if strconv.FormatInt(body.SubscriptionID, 10) != os.Getenv("STRAVA_WEBHOOK_SUBSCRIPTION") {
-			http.Error(w, "Invalid subscription ID", http.StatusBadRequest)
+			http.Error(w, "Invalid strava webhook subscription ID", http.StatusBadRequest)
 			return
 		}
 

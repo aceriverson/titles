@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -52,6 +53,19 @@ func NewDBService() interfaces.DBService {
 
 func (d *DBServiceImpl) Close() {
 	d.db.Close()
+}
+
+func (d *DBServiceImpl) CreateSubscription(userID int64, customer, subscription, customerEmail string) error {
+	_, err := d.db.Exec(
+		"INSERT INTO subscriptions (user_id, customer, subscription, email) VALUES ($1, $2, $3, $4) ON CONFLICT (user_id) DO UPDATE SET customer = $2, subscription = $3, email = $4;",
+		userID, customer, subscription, customerEmail,
+	)
+	if err != nil {
+		log.Println("error inserting subscription:", err)
+		return err
+	}
+
+	return nil
 }
 
 func (d *DBServiceImpl) GetIntersectingPolygons(userID int64, points [][]float64) ([]models.Polygon, error) {
@@ -123,8 +137,26 @@ func (d *DBServiceImpl) GetPOI(points [][]float64) (models.POIs, error) {
 
 func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, error) {
 	user := strava.UserInternal{}
+	var settingsJSON []byte
 
-	err := d.db.QueryRow("SELECT id, name, pic, access_token, refresh_token, expires_at, ai, plan, terms_accepted FROM users WHERE id = $1;", userID).Scan(&user.ID, &user.Name, &user.Pic, &user.AccessToken, &user.RefreshToken, &user.ExpiresAt, &user.AI, &user.Plan, &user.TermsAccepted)
+	err := d.db.QueryRow(`
+		SELECT 
+			u.id, u.name, u.pic, u.access_token, u.refresh_token, u.expires_at, 
+			u.ai, u.plan, u.terms_accepted, COALESCE(s.settings, '{}'::jsonb) 
+		FROM users u 
+		LEFT JOIN user_settings s ON u.id = s.user_id
+		WHERE u.id = $1;
+	`, userID).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Pic,
+		&user.AccessToken,
+		&user.RefreshToken,
+		&user.ExpiresAt,
+		&user.AI,
+		&user.Plan,
+		&user.TermsAccepted,
+		&settingsJSON)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			log.Println("no user found for given ID:", userID)
@@ -132,6 +164,11 @@ func (d *DBServiceImpl) GetUserInternal(userID int64) (strava.UserInternal, erro
 		}
 		log.Println("error querying database:", err)
 		return user, errors.New("could not query database for GetUser")
+	}
+
+	if err := json.Unmarshal(settingsJSON, &user.Settings); err != nil {
+		log.Println("failed to unmarshal settings JSON:", err)
+		return user, errors.New("invalid user settings data")
 	}
 
 	return user, nil
@@ -156,6 +193,23 @@ func (d *DBServiceImpl) UnauthorizeUser(userID int64) error {
 	_, err := d.db.Exec("DELETE FROM users WHERE user_id = $1;", userID)
 	if err != nil {
 		log.Println("error deleting user:", err)
+		return err
+	}
+
+	return nil
+}
+
+func (d *DBServiceImpl) UpdateSubscription(customer, subscription, plan string) error {
+	_, err := d.db.Exec(`
+		UPDATE users
+		SET plan = $1
+		FROM subscriptions
+		WHERE subscriptions.customer = $2
+  			AND subscriptions.subscription = $3
+  			AND subscriptions.user_id = users.id;
+	`, plan, customer, subscription)
+	if err != nil {
+		log.Println("error updating subscription:", err)
 		return err
 	}
 
